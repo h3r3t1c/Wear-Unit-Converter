@@ -22,4 +22,17 @@
     <string name="title_activity_presentation._speed_convert">presentation.SpeedConvertActivity
     </string>
     <string name="title_activity_speed_convert">SpeedConvertActivity</string>
+    <string name="unit_conversion">Unit Conversion</string>
+    <string name="temperature">Temperature</string>
+    <string name="speed">Speed</string>
+    <string name="length">Length</string>
+    <string name="weight">Weight</string>
+    <string name="time">Time</string>
+    <string name="version">Version</string>
+    <string name="app_github">App GitHub</string>
+    <string name="email_me">Email Me</string>
+    <string name="xda_profile">XDA Profile</string>
+    <string name="linkedin_profile">LinkedIn Profile</string>
+    <string name="created_by">Created By</string>
+    <string name="about">About</string>
 </resources>

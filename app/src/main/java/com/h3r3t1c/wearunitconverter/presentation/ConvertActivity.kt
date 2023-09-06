@@ -1,8 +1,3 @@
-/* While this template provides a good starting point for using Wear Compose, you can always
- * take a look at https://github.com/android/wear-os-samples/tree/main/ComposeStarter and
- * https://github.com/android/wear-os-samples/tree/main/ComposeAdvanced to find the most up to date
- * changes to the libraries and their usages.
- */
 
 package com.h3r3t1c.wearunitconverter.presentation
 
@@ -22,7 +17,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
+
+
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -134,7 +132,12 @@ class ConvertActivity : ComponentActivity() {
 @Composable
 fun ConvertWearApp(type:Int, viewModel: ConvertActivityViewModel) {
     WearUnitConverterTheme {
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState(
+            initialPage = 0,
+            initialPageOffsetFraction = 0f
+        ) {
+            2
+        }
         val pageIndicatorState: PageIndicatorState = remember {
             object : PageIndicatorState {
                 override val pageOffset: Float
@@ -152,7 +155,7 @@ fun ConvertWearApp(type:Int, viewModel: ConvertActivityViewModel) {
                 modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
             ) }
         ) {
-            HorizontalPager(pageCount = 2, state = pagerState) { page ->
+            HorizontalPager(state = pagerState) { page ->
                 if(page == 0)
                     PageOne(viewModel, type)
                 else
@@ -165,6 +168,7 @@ fun ConvertWearApp(type:Int, viewModel: ConvertActivityViewModel) {
 @Composable
 fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
     val context = LocalContext.current
+    val isRound = context.resources.configuration.isScreenRound
 
     val fromUnit = viewModel.topUnit.collectAsState().value
 
@@ -189,24 +193,50 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
     Scaffold(
         positionIndicator = { PositionIndicator(scalingLazyListState = listState) },
         timeText = {
-            CurvedLayout(modifier = Modifier
-                .fillMaxWidth()
-                .alpha(listState.topAlpha)
-                .padding(top = 4.dp)
+            if(isRound) {
+                CurvedLayout(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(listState.topAlpha)
+                        .padding(top = 4.dp)
 
-            ){
-                basicCurvedText(
-                    textValueTop+" "+UnitType.unitTypeToString(fromUnit),
-                    CurvedModifier.background(color = Blue500, StrokeCap.Round).padding(4.dp),
-                    overflow = TextOverflow.Ellipsis,
-                    style = {
-                        CurvedTextStyle(
-                            fontSize = 16.sp,
+                ) {
+                    basicCurvedText(
+                        textValueTop + " " + UnitType.unitTypeToString(fromUnit),
+                        CurvedModifier.background(color = Blue500, StrokeCap.Round).padding(4.dp),
+                        overflow = TextOverflow.Ellipsis,
+                        style = {
+                            CurvedTextStyle(
+                                fontSize = 16.sp,
+                                color = Color.White,
+
+                                )
+                        }
+                    )
+                }
+            }
+            else{
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(listState.topAlpha),
+                    contentAlignment = Alignment.Center
+                ){
+                    Box(modifier = Modifier.padding(4.dp).background(color = Blue500, shape = MaterialTheme.shapes.large)){
+                        Text(
+                            text = textValueTop + " " + UnitType.unitTypeToString(fromUnit),
                             color = Color.White,
+                            fontSize = 16.sp,
+                            maxLines = 2,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .padding(top = 2.dp, bottom = 2.dp, start = 6.dp, end = 6.dp)
 
-                            )
+                        )
                     }
-                )
+
+                }
+
             }
         }
     ) {

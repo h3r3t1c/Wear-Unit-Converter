@@ -18,6 +18,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeviceThermostat
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Person
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,10 +57,10 @@ import androidx.wear.compose.material.rememberScalingLazyListState
 import androidx.wear.remote.interactions.RemoteActivityHelper
 import androidx.wear.widget.ConfirmationOverlay
 import com.h3r3t1c.wearunitconverter.BuildConfig
+import com.h3r3t1c.wearunitconverter.R
 import com.h3r3t1c.wearunitconverter.ext.findActivity
 import com.h3r3t1c.wearunitconverter.presentation.theme.WearUnitConverterTheme
 import kotlinx.coroutines.launch
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +76,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WearApp() {
     WearUnitConverterTheme {
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState(
+            initialPage = 0,
+            initialPageOffsetFraction = 0f
+        ) {
+            2
+        }
         val pageIndicatorState: PageIndicatorState = remember {
             object : PageIndicatorState {
                 override val pageOffset: Float
@@ -91,7 +98,7 @@ fun WearApp() {
                 modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
             ) }
         ) {
-            HorizontalPager(pageCount = 2, state = pagerState) { page ->
+            HorizontalPager(state = pagerState) { page ->
                 if(page == 0)
                     HomePage()
                 else
@@ -126,31 +133,45 @@ fun AboutPage(){
         ) {
             item {
                 ListHeader {
-                    Text(text = "About")
+                    Text(text = stringResource(R.string.about))
                 }
             }
             item{
-                AboutOption(title = "Created By", msg = "Thomas Otero", ico = Icons.Default.Person, null)
+                AboutOption(title = stringResource(R.string.created_by), msg = "Thomas Otero", ico = Icons.Default.Person, null)
             }
             item{
-                AboutOption(title = "LinkedIn Profile", msg = null, ico = Icons.Default.Link) {
+                AboutOption(title = stringResource(R.string.linkedin_profile), msg = null, ico = Icons.Default.Link) {
                     coroutineScope.launch {
                         openURL("https://www.linkedin.com/in/thomas-otero-5b8aa429/", context)
                     }
                 }
             }
             item{
-                AboutOption(title = "XDA Profile", msg = null, ico = Icons.Default.Link) {
+                AboutOption(title = stringResource(R.string.xda_profile), msg = null, ico = Icons.Default.Link) {
                     coroutineScope.launch {
                         openURL("https://forum.xda-developers.com/m/h3r3t1c.4535362/", context)
                     }
                 }
             }
             item{
-                AboutOption(title = "Version", msg = BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")", ico = Icons.Default.Info, null)
+                AboutOption(title = stringResource(R.string.app_github), msg = null, ico = Icons.Default.Link) {
+                    coroutineScope.launch {
+                        openURL("https://github.com/h3r3t1c/Wear-Unit-Converter", context)
+                    }
+                }
+            }
+            item{
+                AboutOption(title = stringResource(R.string.email_me), msg = null, ico = Icons.Default.Email) {
+                    coroutineScope.launch {
+                        openURL("mailto:th3h3r3t1c@gmail.com", context)
+                    }
+                }
+            }
+            item{
+                AboutOption(title = stringResource(R.string.version), msg = BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")", ico = Icons.Default.Info, null)
             }
         }
-        LaunchedEffect(Unit){
+        LaunchedEffect(true){
             focusRequester.requestFocus()
         }
     }
@@ -192,27 +213,27 @@ fun HomePage(){
         ) {
             item {
                 ListHeader {
-                    Text(text = "Unit Conversion")
+                    Text(text = stringResource(R.string.unit_conversion))
                 }
             }
             item{
-                HomeOption(title = "Temperature", Icons.Default.DeviceThermostat, ConverterType.TYPE_TEMPERATURE)
+                HomeOption(title = stringResource(R.string.temperature), Icons.Default.DeviceThermostat, ConverterType.TYPE_TEMPERATURE)
             }
             item{
-                HomeOption(title = "Speed", Icons.Default.Speed, ConverterType.TYPE_SPEED)
+                HomeOption(title = stringResource(R.string.speed), Icons.Default.Speed, ConverterType.TYPE_SPEED)
             }
             item{
-                HomeOption(title = "Length", Icons.Default.Straighten, ConverterType.TYPE_LENGTH)
+                HomeOption(title = stringResource(R.string.length), Icons.Default.Straighten, ConverterType.TYPE_LENGTH)
             }
             item{
-                HomeOption(title = "Weight", Icons.Default.Scale, ConverterType.TYPE_WEIGHT)
+                HomeOption(title = stringResource(R.string.weight), Icons.Default.Scale, ConverterType.TYPE_WEIGHT)
             }
             item{
-                HomeOption(title = "Time", Icons.Default.Schedule, ConverterType.TYPE_TIME)
+                HomeOption(title = stringResource(R.string.time), Icons.Default.Schedule, ConverterType.TYPE_TIME)
             }
         }
     }
-    LaunchedEffect(Unit){
+    LaunchedEffect(true){
         focusRequester.requestFocus()
     }
 }
