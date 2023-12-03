@@ -180,7 +180,7 @@ fun openURL(url:String, context:Context){
 
         ConfirmationOverlay()
             .setType(ConfirmationOverlay.OPEN_ON_PHONE_ANIMATION)
-            .setDuration(2000)
+            .setDuration(500)
             .showOn(context.findActivity())
         val remoteActivityHelper = RemoteActivityHelper(context)
         remoteActivityHelper.startRemoteActivity(

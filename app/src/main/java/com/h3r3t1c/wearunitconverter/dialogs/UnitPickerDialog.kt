@@ -76,7 +76,7 @@ fun createUnitPickerDialog(show:Boolean,items:Array<Int>, listener: UnitPickerLi
                         }
                     }
                     items(items.size){index->
-                        createOption(i = items[index])
+                        CreateOption(i = items[index])
                     }
                 }
             }
@@ -88,7 +88,7 @@ fun createUnitPickerDialog(show:Boolean,items:Array<Int>, listener: UnitPickerLi
     ) 
 }
 @Composable
-fun createOption(i:Int){
+fun CreateOption(i:Int){
     Chip(label = {
             Text(text = UnitType.unitTypeToString(i), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 18.sp)
          },
