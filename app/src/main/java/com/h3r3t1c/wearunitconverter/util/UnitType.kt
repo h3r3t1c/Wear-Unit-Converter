@@ -3,7 +3,6 @@ package com.h3r3t1c.wearunitconverter.util
 import android.icu.text.MeasureFormat
 import android.icu.util.MeasureUnit
 import android.icu.util.ULocale
-import com.h3r3t1c.wearunitconverter.BuildConfig
 import com.h3r3t1c.wearunitconverter.presentation.ConverterType
 import java.util.Locale
 
@@ -36,13 +35,13 @@ object UnitType {
 
     const val UNIT_TYPE_WEIGHT_POUND = 21
     const val UNIT_TYPE_WEIGHT_OUNCE = 22
-    const val UNIT_TYPE_WEIGHT_METRIC_TON = 23
+    const val UNIT_TYPE_WEIGHT_TON_METRIC = 23
     const val UNIT_TYPE_WEIGHT_KILOGRAM = 24
     const val UNIT_TYPE_WEIGHT_GRAM = 25
     const val UNIT_TYPE_WEIGHT_MILLIGRAM = 26
-    const val UNIT_TYPE_WEIGHT_IMPERIAL_TON = 27
-    const val UNIT_TYPE_WEIGHT_US_TON = 28
-    const val UNIT_TYPE_WEIGHT_STONE = 29
+    const val UNIT_TYPE_WEIGHT_TON_UK = 27
+    const val UNIT_TYPE_WEIGHT_TON_US = 28
+    const val UNIT_TYPE_WEIGHT_STONE_UK = 29
 
 
     val TEMP_UNITS = arrayOf( UNIT_TYPE_TEMPERATURE_FAHRENHEIT,UNIT_TYPE_TEMPERATURE_CELSIUS, UNIT_TYPE_TEMPERATURE_KELVIN)
@@ -50,22 +49,26 @@ object UnitType {
     val TIME_UNITS = arrayOf(UNIT_TYPE_TIME_MILLS,UNIT_TYPE_TIME_SECOND,UNIT_TYPE_TIME_MINUTE,UNIT_TYPE_TIME_HOUR,UNIT_TYPE_TIME_DAY)
     val LENGTH_UNITS = arrayOf(UNIT_TYPE_LENGTH_FOOT,UNIT_TYPE_LENGTH_KILOMETER,UNIT_TYPE_LENGTH_METER,UNIT_TYPE_LENGTH_CENTIMETER,UNIT_TYPE_LENGTH_MILLIMETER,
         UNIT_TYPE_LENGTH_MILE, UNIT_TYPE_LENGTH_YARD, UNIT_TYPE_LENGTH_INCH)
-    val WEIGHT_UNITS = arrayOf(UNIT_TYPE_WEIGHT_POUND,UNIT_TYPE_WEIGHT_OUNCE,UNIT_TYPE_WEIGHT_METRIC_TON,UNIT_TYPE_WEIGHT_KILOGRAM,UNIT_TYPE_WEIGHT_GRAM,
-        UNIT_TYPE_WEIGHT_MILLIGRAM, UNIT_TYPE_WEIGHT_IMPERIAL_TON, UNIT_TYPE_WEIGHT_US_TON, UNIT_TYPE_WEIGHT_STONE)
+    val WEIGHT_UNITS = arrayOf(UNIT_TYPE_WEIGHT_POUND,UNIT_TYPE_WEIGHT_OUNCE,UNIT_TYPE_WEIGHT_TON_METRIC,UNIT_TYPE_WEIGHT_KILOGRAM,UNIT_TYPE_WEIGHT_GRAM,
+        UNIT_TYPE_WEIGHT_MILLIGRAM, UNIT_TYPE_WEIGHT_TON_UK, UNIT_TYPE_WEIGHT_TON_US, UNIT_TYPE_WEIGHT_STONE_UK)
 
     private lateinit var unitFormatter:MeasureFormat
     private lateinit var unitFormatterShort:MeasureFormat
+    private lateinit var unitFormatterLong : MeasureFormat
 
     /**
      *  Important: MeasureFormat does not work with unit testing...
      */
-    fun unitTypeToString(type: Int):String{
+    fun unitTypeToString(type: Int, useFull:Boolean = false):String{
         if(!this::unitFormatter.isInitialized) {
             unitFormatter = MeasureFormat.getInstance(
                 ULocale.getDefault(), MeasureFormat.FormatWidth.NARROW
             )
             unitFormatterShort = MeasureFormat.getInstance(
                 ULocale.getDefault(), MeasureFormat.FormatWidth.SHORT
+            )
+            unitFormatterLong = MeasureFormat.getInstance(
+                ULocale.getDefault(), MeasureFormat.FormatWidth.WIDE
             )
         }
         return if(type in 8..12){
@@ -97,13 +100,13 @@ object UnitType {
                 // weight
                 UNIT_TYPE_WEIGHT_POUND -> unitFormatter.getUnitDisplayName(MeasureUnit.POUND)
                 UNIT_TYPE_WEIGHT_OUNCE -> unitFormatter.getUnitDisplayName(MeasureUnit.OUNCE)
-                UNIT_TYPE_WEIGHT_METRIC_TON -> "Metric Ton"
+                UNIT_TYPE_WEIGHT_TON_METRIC -> "ton (metric)"
                 UNIT_TYPE_WEIGHT_KILOGRAM -> unitFormatter.getUnitDisplayName(MeasureUnit.KILOGRAM)
                 UNIT_TYPE_WEIGHT_GRAM -> unitFormatter.getUnitDisplayName(MeasureUnit.GRAM)
                 UNIT_TYPE_WEIGHT_MILLIGRAM -> unitFormatter.getUnitDisplayName(MeasureUnit.MILLIGRAM)
-                UNIT_TYPE_WEIGHT_IMPERIAL_TON -> "Imperial Ton"
-                UNIT_TYPE_WEIGHT_US_TON -> unitFormatter.getUnitDisplayName(MeasureUnit.TON)
-                UNIT_TYPE_WEIGHT_STONE -> unitFormatter.getUnitDisplayName(MeasureUnit.STONE)
+                UNIT_TYPE_WEIGHT_TON_UK -> "ton (UK)"
+                UNIT_TYPE_WEIGHT_TON_US -> "ton (US)"
+                UNIT_TYPE_WEIGHT_STONE_UK -> unitFormatter.getUnitDisplayName(MeasureUnit.STONE)
                 else ->"?"
             }
     }

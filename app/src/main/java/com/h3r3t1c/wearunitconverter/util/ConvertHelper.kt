@@ -16,7 +16,7 @@ object ConvertHelper {
     fun fToK(f:Double):Double = (f-32.0)*(0.55555555555)+273.15
 
     fun cToF(c:Double):Double = (c*(1.8))+32.0
-    fun cToK(c:Double):Double = c+273.15f
+    fun cToK(c:Double):Double = c+273.15
 
     fun kToF(k:Double):Double = (k-273.15)*(1.8)+32.0
     fun kToC(k:Double):Double = k-273.15
@@ -36,71 +36,71 @@ object ConvertHelper {
         return when(unitIn){
             UnitType.UNIT_TYPE_LENGTH_FOOT ->{
                 when(unitOut){
-                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn / 3281.0
-                    UnitType.UNIT_TYPE_LENGTH_METER -> numIn / 3.281
+                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn * 0.0003048
+                    UnitType.UNIT_TYPE_LENGTH_METER -> numIn * 0.3048
                     UnitType.UNIT_TYPE_LENGTH_CENTIMETER  -> numIn * 30.48
                     UnitType.UNIT_TYPE_LENGTH_MILLIMETER -> numIn * 304.8
-                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn / 5280.0
-                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn / 3.0
+                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn * 0.0001893939
+                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * (1.0/3.0)
                     UnitType.UNIT_TYPE_LENGTH_INCH -> numIn * 12.0
                     else -> numIn
                 }
             }
             UnitType.UNIT_TYPE_LENGTH_KILOMETER->{
                 when(unitOut){
-                    UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn * 3281.0
+                    UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn * 3280.839895
                     UnitType.UNIT_TYPE_LENGTH_METER -> numIn * 1000.0
                     UnitType.UNIT_TYPE_LENGTH_CENTIMETER  -> numIn * 100000
                     UnitType.UNIT_TYPE_LENGTH_MILLIMETER -> numIn * 1e+6
-                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn / 1.609
-                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * 1094.0
-                    UnitType.UNIT_TYPE_LENGTH_INCH -> numIn * 39370.0
+                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn * 0.6213711922
+                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * 1093.6132983
+                    UnitType.UNIT_TYPE_LENGTH_INCH -> numIn * 39370.07874
                     else -> numIn
                 }
             }
             UnitType.UNIT_TYPE_LENGTH_METER->{
                 when(unitOut){
-                    UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn * 3.281
-                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn / 1000.0
+                    UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn * 3.280839895
+                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn * 0.001
                     UnitType.UNIT_TYPE_LENGTH_CENTIMETER  -> numIn * 100.0
                     UnitType.UNIT_TYPE_LENGTH_MILLIMETER -> numIn * 1000.0
-                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn / 1609.0
-                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * 1.094
-                    UnitType.UNIT_TYPE_LENGTH_INCH -> numIn * 39.37
+                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn * 0.0006213712
+                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * 1.0936132983
+                    UnitType.UNIT_TYPE_LENGTH_INCH -> numIn * 39.37007874
                     else -> numIn
                 }
             }
             UnitType.UNIT_TYPE_LENGTH_CENTIMETER->{
                 when(unitOut){
-                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn / 100000.0
-                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn / 100.0
+                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn * 0.00001
+                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn * 0.01
                     UnitType.UNIT_TYPE_LENGTH_MILLIMETER -> numIn * 10.0
-                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn / 160900.0
-                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn / 91.44
-                    UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn / 30.48
-                    UnitType.UNIT_TYPE_LENGTH_INCH -> numIn / 2.54
+                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn * 0.0000062137
+                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * 0.010936133
+                    UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn * 0.032808399
+                    UnitType.UNIT_TYPE_LENGTH_INCH -> numIn * 0.3937007874
                     else -> numIn
                 }
             }
             UnitType.UNIT_TYPE_LENGTH_MILLIMETER->{
                 when(unitOut){
-                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn / 1e+6
-                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn / 1000.0
-                    UnitType.UNIT_TYPE_LENGTH_CENTIMETER -> numIn / 10.0
-                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn / 1.609e+6
-                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn / 914.4
-                    UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn / 304.8
-                    UnitType.UNIT_TYPE_LENGTH_INCH -> numIn / 25.4
+                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn * 0.000001
+                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn * 0.001
+                    UnitType.UNIT_TYPE_LENGTH_CENTIMETER -> numIn * 0.1
+                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn * 6.213711922E-7
+                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * 0.0010936133
+                    UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn * 0.0032808399
+                    UnitType.UNIT_TYPE_LENGTH_INCH -> numIn * 0.0393700787
                     else -> numIn
                 }
             }
             UnitType.UNIT_TYPE_LENGTH_MILE->{
                 when(unitOut){
-                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn * 1.609
-                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn * 1609.34
-                    UnitType.UNIT_TYPE_LENGTH_CENTIMETER -> numIn * 160934
-                    UnitType.UNIT_TYPE_LENGTH_MILLIMETER -> numIn * 1.609e+6
-                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * 1960.0
+                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn * 1.609344
+                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn * 1609.344
+                    UnitType.UNIT_TYPE_LENGTH_CENTIMETER -> numIn * 160934.4
+                    UnitType.UNIT_TYPE_LENGTH_MILLIMETER -> numIn * 1609344
+                    UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * 1760.0
                     UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn * 5280.0
                     UnitType.UNIT_TYPE_LENGTH_INCH -> numIn * 63360.0
                     else -> numIn
@@ -108,11 +108,11 @@ object ConvertHelper {
             }
             UnitType.UNIT_TYPE_LENGTH_YARD->{
                 when(unitOut){
-                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn / 1094.0
-                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn / 1.094
+                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn * 0.0009144
+                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn * 0.9144
                     UnitType.UNIT_TYPE_LENGTH_CENTIMETER -> numIn * 91.44
                     UnitType.UNIT_TYPE_LENGTH_MILLIMETER -> numIn * 914.4
-                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn / 1760.0
+                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn * 0.0005681818
                     UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn * 3.0
                     UnitType.UNIT_TYPE_LENGTH_INCH -> numIn * 36.0
                     else -> numIn
@@ -120,11 +120,11 @@ object ConvertHelper {
             }
             UnitType.UNIT_TYPE_LENGTH_INCH->{
                 when(unitOut){
-                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn / 39370.0
-                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn / 39.37
+                    UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn * 0.0000254
+                    UnitType.UNIT_TYPE_LENGTH_METER  -> numIn * 0.0254
                     UnitType.UNIT_TYPE_LENGTH_CENTIMETER -> numIn * 2.54
                     UnitType.UNIT_TYPE_LENGTH_MILLIMETER -> numIn * 25.4
-                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn / 63360.0
+                    UnitType.UNIT_TYPE_LENGTH_MILE -> numIn * 0.0000157828
                     UnitType.UNIT_TYPE_LENGTH_YARD -> numIn / 36.0
                     UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn / 12.0
                     else -> numIn
@@ -136,98 +136,98 @@ object ConvertHelper {
     }
     private fun convertWeights(numIn:Double, unitIn:Int, unitOut:Int) : Double{
         return when(unitIn){
-            UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> {
+            UnitType.UNIT_TYPE_WEIGHT_TON_METRIC -> {
                 when (unitOut) {
                     UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 1000.0
-                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 1e+6
-                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 1e+9
-                    UnitType.UNIT_TYPE_WEIGHT_IMPERIAL_TON -> numIn / 1.016
-                    UnitType.UNIT_TYPE_WEIGHT_US_TON -> numIn * 1.102
-                    UnitType.UNIT_TYPE_WEIGHT_STONE -> numIn * 157.5
-                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 2204.62
-                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 35270.0
+                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 1000000
+                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 1000000000
+                    UnitType.UNIT_TYPE_WEIGHT_TON_UK -> numIn * 0.9842065276
+                    UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 1.1023113109
+                    UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> numIn * 157.47304442
+                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 2204.6226218
+                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 2204.6226218
                     else -> numIn
                 }
             }
 
             UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> numIn / 1000.0
+                    UnitType.UNIT_TYPE_WEIGHT_TON_METRIC -> numIn * 0.001
                     UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 1000.0
-                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 1e+6
-                    UnitType.UNIT_TYPE_WEIGHT_IMPERIAL_TON -> numIn / 1016.0
-                    UnitType.UNIT_TYPE_WEIGHT_US_TON -> numIn / 907.2
-                    UnitType.UNIT_TYPE_WEIGHT_STONE -> numIn / 6.35
-                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 2.205
-                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 35.274
+                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 1000000
+                    UnitType.UNIT_TYPE_WEIGHT_TON_UK -> numIn * 0.0009842065
+                    UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 0.0011023113
+                    UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> numIn * 0.1574730444
+                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 2.2046226218
+                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 35.27396195
                     else -> numIn
                 }
             }
 
             UnitType.UNIT_TYPE_WEIGHT_GRAM -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> numIn / 1e+6
-                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn / 1000.0
-                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 1000
-                    UnitType.UNIT_TYPE_WEIGHT_IMPERIAL_TON -> numIn / 1.016e+6
-                    UnitType.UNIT_TYPE_WEIGHT_US_TON -> numIn / 907200.0
-                    UnitType.UNIT_TYPE_WEIGHT_STONE -> numIn / 6350.0
-                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn / 453.6
-                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn / 28.35
+                    UnitType.UNIT_TYPE_WEIGHT_TON_METRIC  -> numIn * 0.000001
+                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 0.001
+                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 1000.0
+                    UnitType.UNIT_TYPE_WEIGHT_TON_UK -> numIn * 9.842065276E-7
+                    UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 0.0000011023
+                    UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> numIn * 0.000157473
+                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 0.0022046226
+                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 0.0352739619
                     else -> numIn
                 }
             }
 
             UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> numIn / 1e+9
-                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn / 1e+6
-                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn / 1000
-                    UnitType.UNIT_TYPE_WEIGHT_IMPERIAL_TON -> numIn / 1.016e+9
-                    UnitType.UNIT_TYPE_WEIGHT_US_TON -> numIn / 9.072e+8
-                    UnitType.UNIT_TYPE_WEIGHT_STONE -> numIn / 6.35e+6
-                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn / 453600.0
-                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn / 28350.0
+                    UnitType.UNIT_TYPE_WEIGHT_TON_METRIC -> numIn * 1.0E-9
+                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 0.000001
+                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 0.001
+                    UnitType.UNIT_TYPE_WEIGHT_TON_UK -> numIn * 9.842065276E-10
+                    UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 1.10231131E-9
+                    UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> numIn * 1.574730444E-7
+                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 0.0000022046
+                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 0.000035274
                     else -> numIn
                 }
             }
 
-            UnitType.UNIT_TYPE_WEIGHT_IMPERIAL_TON -> {
+            UnitType.UNIT_TYPE_WEIGHT_TON_UK -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> numIn / 1.01605
-                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 1016.05
-                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 1.016e+6
-                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 1.016e+9
-                    UnitType.UNIT_TYPE_WEIGHT_US_TON -> numIn * 1.12
-                    UnitType.UNIT_TYPE_WEIGHT_STONE -> numIn * 160.0
+                    UnitType.UNIT_TYPE_WEIGHT_TON_METRIC -> numIn * 1.0160469088
+                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 1016.0469088
+                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 1016046.9088
+                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 1016046908.8
+                    UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 1.12
+                    UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> numIn * 160.0
                     UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 2240.0
                     UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 35840.0
                     else -> numIn
                 }
             }
 
-            UnitType.UNIT_TYPE_WEIGHT_US_TON -> {
+            UnitType.UNIT_TYPE_WEIGHT_TON_US -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> numIn / 1.102
-                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 907.2
-                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 907200
-                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 9.072e+8
-                    UnitType.UNIT_TYPE_WEIGHT_IMPERIAL_TON -> numIn / 1.12
-                    UnitType.UNIT_TYPE_WEIGHT_STONE -> numIn * 142.857
+                    UnitType.UNIT_TYPE_WEIGHT_TON_METRIC -> numIn * 0.90718474
+                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 907.18474
+                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 907184.74
+                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 907184740
+                    UnitType.UNIT_TYPE_WEIGHT_TON_UK -> numIn * 0.8928571429
+                    UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> numIn * 142.85714286
                     UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 2000.0
                     UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 32000.0
                     else -> numIn
                 }
             }
 
-            UnitType.UNIT_TYPE_WEIGHT_STONE -> {
+            UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> numIn / 157.5
-                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 6.35
-                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 6350.0
-                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 6.35e+6
-                    UnitType.UNIT_TYPE_WEIGHT_IMPERIAL_TON -> numIn / 160.0
-                    UnitType.UNIT_TYPE_WEIGHT_US_TON -> numIn / 142.857
+                    UnitType.UNIT_TYPE_WEIGHT_TON_METRIC -> numIn * 0.0063502932
+                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 6.35029318
+                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 6350.29318
+                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 6350293.18
+                    UnitType.UNIT_TYPE_WEIGHT_TON_UK -> numIn * 0.00625
+                    UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 0.007
                     UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 14.0
                     UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 224.0
                     else -> numIn
@@ -236,28 +236,28 @@ object ConvertHelper {
 
             UnitType.UNIT_TYPE_WEIGHT_POUND -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> numIn / 2250
-                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn / 2.205
-                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 453.592
-                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 453592
-                    UnitType.UNIT_TYPE_WEIGHT_IMPERIAL_TON -> numIn / 2240.0
-                    UnitType.UNIT_TYPE_WEIGHT_US_TON -> numIn / 2000.0
-                    UnitType.UNIT_TYPE_WEIGHT_STONE -> numIn / 10
-                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 16
+                    UnitType.UNIT_TYPE_WEIGHT_TON_METRIC -> numIn * 0.0004535924
+                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 0.45359237
+                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 453.59237
+                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 453592.37
+                    UnitType.UNIT_TYPE_WEIGHT_TON_UK -> numIn * 0.0004464286
+                    UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 0.0005
+                    UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> numIn * 0.0714285714
+                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 16.0
                     else -> numIn
                 }
             }
 
             UnitType.UNIT_TYPE_WEIGHT_OUNCE -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> numIn / 35270.0
-                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn / 35.274
-                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 28.3495
-                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 28350.0
-                    UnitType.UNIT_TYPE_WEIGHT_IMPERIAL_TON -> numIn / 35840.0
-                    UnitType.UNIT_TYPE_WEIGHT_US_TON -> numIn / 32000.0
-                    UnitType.UNIT_TYPE_WEIGHT_STONE -> numIn / 224.0
-                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn / 16
+                    UnitType.UNIT_TYPE_WEIGHT_TON_METRIC -> numIn * 0.0000283495
+                    UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 0.0283495231
+                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 28.349523125
+                    UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 28349.523125
+                    UnitType.UNIT_TYPE_WEIGHT_TON_UK -> numIn * 0.0000279018
+                    UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 0.00003125
+                    UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> numIn * 0.0044642857
+                    UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn / 16.0 // ok
                     else -> numIn
                 }
             }
@@ -297,7 +297,7 @@ object ConvertHelper {
                 }
             }
 
-            UnitType.UNIT_TYPE_SPEED_KM_PER_HOUR -> { // start here
+            UnitType.UNIT_TYPE_SPEED_KM_PER_HOUR -> {
                 when (unitOut) {
                     UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> numIn * 0.6213711922
                     UnitType.UNIT_TYPE_SPEED_FOOT_PER_SECOND -> numIn * 0.9113444153
@@ -309,9 +309,9 @@ object ConvertHelper {
 
             UnitType.UNIT_TYPE_SPEED_KNOT -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> numIn * 1.15078
-                    UnitType.UNIT_TYPE_SPEED_FOOT_PER_SECOND -> numIn * 1.68781
-                    UnitType.UNIT_TYPE_SPEED_METER_PER_SECOND -> numIn / 1944
+                    UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> numIn * 1.150779448
+                    UnitType.UNIT_TYPE_SPEED_FOOT_PER_SECOND -> numIn * 1.6878098571
+                    UnitType.UNIT_TYPE_SPEED_METER_PER_SECOND -> numIn * 0.5144444444
                     UnitType.UNIT_TYPE_SPEED_KM_PER_HOUR -> numIn * 1.852
                     else -> numIn
                 }
@@ -319,7 +319,7 @@ object ConvertHelper {
             else -> numIn
         }
     }
-    fun convertTemperature(numIn:Double, unitIn:Int, unitOut:Int):Double {
+    private fun convertTemperature(numIn:Double, unitIn:Int, unitOut:Int):Double {
         return when (unitIn) {
             UnitType.UNIT_TYPE_TEMPERATURE_FAHRENHEIT -> {
                 when (unitOut) {
