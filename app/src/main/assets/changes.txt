@@ -1,1 +1,4 @@
 * Changed name to Unit Converter
+* Improved launcher icon
+* Added splash screen
+* Fixed font scaling issues

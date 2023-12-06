@@ -10,9 +10,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -31,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -42,6 +47,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.HorizontalPageIndicator
@@ -50,20 +61,23 @@ import androidx.wear.compose.material.ListHeader
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.PositionIndicator
+
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.rememberScalingLazyListState
+
 import androidx.wear.remote.interactions.RemoteActivityHelper
 import androidx.wear.widget.ConfirmationOverlay
 import com.h3r3t1c.wearunitconverter.BuildConfig
 import com.h3r3t1c.wearunitconverter.R
 import com.h3r3t1c.wearunitconverter.ext.findActivity
+import com.h3r3t1c.wearunitconverter.presentation.theme.Blue500
+import com.h3r3t1c.wearunitconverter.presentation.theme.Red500
 import com.h3r3t1c.wearunitconverter.presentation.theme.WearUnitConverterTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         setContent {
             WearApp()
@@ -107,10 +121,11 @@ fun WearApp() {
         }
     }
 }
+@OptIn(ExperimentalWearFoundationApi::class)
 @Composable
 fun AboutPage(){
     val listState = rememberScalingLazyListState()
-    val focusRequester = remember { FocusRequester() }
+    val focusRequester = rememberActiveFocusRequester()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -124,6 +139,7 @@ fun AboutPage(){
                 .onRotaryScrollEvent {
                     coroutineScope.launch {
                         listState.scrollBy(it.verticalScrollPixels)
+                        listState.animateScrollBy(0f)
                     }
                     true
                 }
@@ -133,11 +149,11 @@ fun AboutPage(){
         ) {
             item {
                 ListHeader {
-                    Text(text = stringResource(R.string.about))
+                    Text(text = stringResource(R.string.about), color = Red500)
                 }
             }
             item{
-                AboutOption(title = stringResource(R.string.created_by), msg = "Thomas Otero", ico = Icons.Default.Person, null)
+                AboutOption(false, title = stringResource(R.string.created_by), msg = "Thomas Otero", ico = Icons.Default.Person, null)
             }
             item{
                 AboutOption(title = stringResource(R.string.linkedin_profile), msg = null, ico = Icons.Default.Link) {
@@ -168,7 +184,7 @@ fun AboutPage(){
                 }
             }
             item{
-                AboutOption(title = stringResource(R.string.version), msg = BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")", ico = Icons.Default.Info, null)
+                AboutOption(false, title = stringResource(R.string.version), msg = BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")", ico = Icons.Default.Info, null)
             }
         }
         LaunchedEffect(true){
@@ -189,10 +205,11 @@ fun openURL(url:String, context:Context){
             ).addCategory(Intent.CATEGORY_BROWSABLE), null
         )
 }
+@OptIn(ExperimentalWearFoundationApi::class)
 @Composable
 fun HomePage(){
     val listState = rememberScalingLazyListState()
-    val focusRequester = remember { FocusRequester() }
+    val focusRequester = rememberActiveFocusRequester()
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         positionIndicator = {PositionIndicator(scalingLazyListState = listState)}
@@ -204,6 +221,7 @@ fun HomePage(){
                 .onRotaryScrollEvent {
                     coroutineScope.launch {
                         listState.scrollBy(it.verticalScrollPixels)
+                        listState.animateScrollBy(0f)
                     }
                     true
                 }
@@ -213,7 +231,7 @@ fun HomePage(){
         ) {
             item {
                 ListHeader {
-                    Text(text = stringResource(R.string.unit_conversion))
+                    Text(text = stringResource(R.string.unit_conversion), color = Red500)
                 }
             }
             item{
@@ -238,29 +256,30 @@ fun HomePage(){
     }
 }
 @Composable
-fun AboutOption(title:String, msg:String?, ico: ImageVector, click: (() -> Unit)?){
-    Chip(
-        label = {
-            Text(text = title)
-        },
-        secondaryLabel = {
-            if(msg != null)
-                Text(text = msg)
-        },
+fun AboutOption(isEnabled:Boolean = true, title:String, msg:String?, ico: ImageVector, click: (() -> Unit)?){
+    Card(
         onClick = {
             if (click != null) {
                 click()
             }
         },
-        icon = {
-            Icon(imageVector = ico, contentDescription = "")
-        },
-        colors = ChipDefaults.primaryChipColors(
-            contentColor = Color.White,
-            backgroundColor = MaterialTheme.colors.surface
-        ),
-        modifier = Modifier.fillMaxWidth()
-    )
+        enabled = isEnabled
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+
+        ) {
+            Icon(imageVector = ico, contentDescription = null)
+            Column(
+                modifier = Modifier.padding(start = 6.dp)
+            ) {
+                Text(text = title)
+                if(msg != null)
+                    Text(text = msg, color = Blue500)
+            }
+
+        }
+    }
 }
 @Composable
 fun HomeOption(title: String, ico : ImageVector, type:Int){
@@ -290,5 +309,5 @@ fun clickOption(context: Context, type:Int){
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    WearApp()
+    
 }

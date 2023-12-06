@@ -1,13 +1,11 @@
 package com.h3r3t1c.wearunitconverter.util
 
 import java.text.DecimalFormat
-import java.time.Duration
-import java.time.temporal.ChronoUnit
-import kotlin.time.Duration.Companion.convert
+import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
-object Converter {
+object ConvertHelper {
 
     lateinit var numberFormat:DecimalFormat
     lateinit var timeNumberFormat: DecimalFormat
@@ -28,10 +26,14 @@ object Converter {
         if(!this::timeNumberFormat.isInitialized){
             timeNumberFormat = DecimalFormat("0.####E0")
         }
-        return convert(value, supportedTimedUnits[fromUnit-8], supportedTimedUnits[toUnit-8]).toString()
+        return convertTimeRaw(value, fromUnit, toUnit).toString()
     }
-    private fun convertLength(numIn:Double, unitIn:Int, unitOut:Int): String{
-        val out = when(unitIn){
+    @OptIn(ExperimentalTime::class)
+    fun convertTimeRaw(value:Double, fromUnit: Int, toUnit:Int):Double{
+        return Duration.convert(value, supportedTimedUnits[fromUnit-8], supportedTimedUnits[toUnit-8])
+    }
+    private fun convertLength(numIn:Double, unitIn:Int, unitOut:Int): Double{
+        return when(unitIn){
             UnitType.UNIT_TYPE_LENGTH_FOOT ->{
                 when(unitOut){
                     UnitType.UNIT_TYPE_LENGTH_KILOMETER -> numIn / 3281.0
@@ -130,10 +132,10 @@ object Converter {
             }
             else  -> numIn
         }
-        return formatNumber(out)
+
     }
-    private fun convertWeights(numIn:Double, unitIn:Int, unitOut:Int) : String{
-        val out = when(unitIn){
+    private fun convertWeights(numIn:Double, unitIn:Int, unitOut:Int) : Double{
+        return when(unitIn){
             UnitType.UNIT_TYPE_WEIGHT_METRIC_TON -> {
                 when (unitOut) {
                     UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 1000.0
@@ -262,46 +264,45 @@ object Converter {
 
             else -> numIn
         }
-        return formatNumber(out)
     }
-    private fun convertSpeed(numIn:Double, unitIn:Int, unitOut:Int):String{
-        val out = when(unitIn){
+    private fun convertSpeed(numIn:Double, unitIn:Int, unitOut:Int):Double{
+        return when(unitIn){
             UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> {
                 when (unitOut) {
                     UnitType.UNIT_TYPE_SPEED_FOOT_PER_SECOND -> numIn * 1.46667
-                    UnitType.UNIT_TYPE_SPEED_METER_PER_SECOND -> numIn / 2.237
+                    UnitType.UNIT_TYPE_SPEED_METER_PER_SECOND -> numIn * 0.44704
                     UnitType.UNIT_TYPE_SPEED_KM_PER_HOUR -> numIn * 1.60934
-                    UnitType.UNIT_TYPE_SPEED_KNOT -> numIn / 1.151
+                    UnitType.UNIT_TYPE_SPEED_KNOT -> numIn * 0.8689762419
                     else -> numIn
                 }
             }
 
             UnitType.UNIT_TYPE_SPEED_FOOT_PER_SECOND -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> numIn / 1.46667
-                    UnitType.UNIT_TYPE_SPEED_METER_PER_SECOND -> numIn / 3.281
+                    UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> numIn * 0.6818181818
+                    UnitType.UNIT_TYPE_SPEED_METER_PER_SECOND -> numIn * 0.3048
                     UnitType.UNIT_TYPE_SPEED_KM_PER_HOUR -> numIn * 1.09728
-                    UnitType.UNIT_TYPE_SPEED_KNOT -> numIn / 1.688
+                    UnitType.UNIT_TYPE_SPEED_KNOT -> numIn * 0.5924838013
                     else -> numIn
                 }
             }
 
             UnitType.UNIT_TYPE_SPEED_METER_PER_SECOND -> {
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> numIn * 2.23694
-                    UnitType.UNIT_TYPE_SPEED_FOOT_PER_SECOND -> numIn * 3.28084
+                    UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> numIn * 2.2369362921
+                    UnitType.UNIT_TYPE_SPEED_FOOT_PER_SECOND -> numIn * 3.280839895
                     UnitType.UNIT_TYPE_SPEED_KM_PER_HOUR -> numIn * 3.6
-                    UnitType.UNIT_TYPE_SPEED_KNOT -> numIn * 1.94384
+                    UnitType.UNIT_TYPE_SPEED_KNOT -> numIn * 1.9438444924
                     else -> numIn
                 }
             }
 
-            UnitType.UNIT_TYPE_SPEED_KM_PER_HOUR -> {
+            UnitType.UNIT_TYPE_SPEED_KM_PER_HOUR -> { // start here
                 when (unitOut) {
-                    UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> numIn / 0.621371
-                    UnitType.UNIT_TYPE_SPEED_FOOT_PER_SECOND -> numIn / 0.9113344
-                    UnitType.UNIT_TYPE_SPEED_METER_PER_SECOND -> numIn / 3.6
-                    UnitType.UNIT_TYPE_SPEED_KNOT -> numIn / 1.852
+                    UnitType.UNIT_TYPE_SPEED_MILE_PER_HOUR -> numIn * 0.6213711922
+                    UnitType.UNIT_TYPE_SPEED_FOOT_PER_SECOND -> numIn * 0.9113444153
+                    UnitType.UNIT_TYPE_SPEED_METER_PER_SECOND -> numIn * 0.2777777778
+                    UnitType.UNIT_TYPE_SPEED_KNOT -> numIn * 0.5399568035
                     else -> numIn
                 }
             }
@@ -317,53 +318,52 @@ object Converter {
             }
             else -> numIn
         }
-        return formatNumber(out)
+    }
+    fun convertTemperature(numIn:Double, unitIn:Int, unitOut:Int):Double {
+        return when (unitIn) {
+            UnitType.UNIT_TYPE_TEMPERATURE_FAHRENHEIT -> {
+                when (unitOut) {
+                    UnitType.UNIT_TYPE_TEMPERATURE_CELSIUS -> fToC(numIn)
+                    UnitType.UNIT_TYPE_TEMPERATURE_KELVIN -> fToK(numIn)
+                    else -> numIn
+                }
+            }
+
+            UnitType.UNIT_TYPE_TEMPERATURE_CELSIUS -> {
+                when (unitOut) {
+                    UnitType.UNIT_TYPE_TEMPERATURE_FAHRENHEIT -> cToF(numIn)
+                    UnitType.UNIT_TYPE_TEMPERATURE_KELVIN -> cToK(numIn)
+                    else -> numIn
+                }
+            }
+
+            UnitType.UNIT_TYPE_TEMPERATURE_KELVIN -> {
+                when (unitOut) {
+                    UnitType.UNIT_TYPE_TEMPERATURE_FAHRENHEIT -> kToF(numIn)
+                    UnitType.UNIT_TYPE_TEMPERATURE_CELSIUS -> kToC(numIn)
+                    else -> numIn
+                }
+            }
+
+            else -> numIn
+        }
     }
     fun convertUnits(numIn:Double, unitIn:Int, unitOut:Int):String{
-        if(UnitType.TIME_UNITS.contains(unitIn)){
-            return convertTime(numIn,unitIn, unitOut)
-        }
-        else if(UnitType.LENGTH_UNITS.contains(unitIn)){
-            return convertLength(numIn, unitIn, unitOut)
-        }
-        else if(UnitType.WEIGHT_UNITS.contains(unitIn)){
-            return convertWeights(numIn, unitIn, unitOut)
-        }
-        else if(UnitType.SPEED_UNITS.contains(unitIn)){
-            return convertSpeed(numIn, unitIn, unitOut)
-        }
-        else {
-            val out = when (unitIn) {
-                UnitType.UNIT_TYPE_FAHRENHEIT -> {
-                    when (unitOut) {
-                        UnitType.UNIT_TYPE_CELSIUS -> fToC(numIn)
-                        UnitType.UNIT_TYPE_KELVIN -> fToK(numIn)
-                        else -> numIn
-                    }
-                }
-
-                UnitType.UNIT_TYPE_CELSIUS -> {
-                    when (unitOut) {
-                        UnitType.UNIT_TYPE_FAHRENHEIT -> cToF(numIn)
-                        UnitType.UNIT_TYPE_KELVIN -> cToK(numIn)
-                        else -> numIn
-                    }
-                }
-
-                UnitType.UNIT_TYPE_KELVIN -> {
-                    when (unitOut) {
-                        UnitType.UNIT_TYPE_FAHRENHEIT -> kToF(numIn)
-                        UnitType.UNIT_TYPE_CELSIUS -> kToC(numIn)
-                        else -> numIn
-                    }
-                }
-
-                else -> numIn
-            }
-            return formatNumber(out)
+        return formatNumber(convertUnitsRaw(numIn, unitIn, unitOut))
+    }
+    fun convertUnitsRaw(numIn:Double, unitIn:Int, unitOut:Int):Double{
+        return if(UnitType.TIME_UNITS.contains(unitIn)){
+            convertTimeRaw(numIn,unitIn, unitOut)
+        } else if(UnitType.LENGTH_UNITS.contains(unitIn)){
+            convertLength(numIn, unitIn, unitOut)
+        } else if(UnitType.WEIGHT_UNITS.contains(unitIn)){
+            convertWeights(numIn, unitIn, unitOut)
+        } else if(UnitType.SPEED_UNITS.contains(unitIn)){
+            convertSpeed(numIn, unitIn, unitOut)
+        } else {
+            convertTemperature(numIn,unitIn, unitOut)
         }
     }
-
     private fun formatNumber(d:Double?):String{
         if(!this::numberFormat.isInitialized){
             numberFormat = DecimalFormat("0.####")

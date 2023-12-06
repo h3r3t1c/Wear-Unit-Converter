@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="box_inset_layout_padding">0dp</dimen>
+    <dimen name="inner_frame_layout_padding">5dp</dimen>
+    <dimen name="splash_screen_icon_size">36dp</dimen>
+    <dimen name="splash_screen_icon_size_round">48dp</dimen>
+    <dimen name="scroll_padding">8dp</dimen>
+    <dimen name="scroll_padding_bottom">16dp</dimen>
+</resources>

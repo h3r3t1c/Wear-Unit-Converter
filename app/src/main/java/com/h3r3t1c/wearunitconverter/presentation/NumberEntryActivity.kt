@@ -154,7 +154,7 @@ fun CVNumberKey(
                 "back",
                 tint = Color.White
             )
-            else -> Text(key, fontFamily = SansSerif, fontSize = 20.sp)
+            else -> Text(key, fontFamily = SansSerif, fontSize = 16.sp)
         }
     }
 }

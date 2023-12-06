@@ -4,7 +4,6 @@ package com.h3r3t1c.wearunitconverter.presentation
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -15,26 +14,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 
 
 import androidx.compose.foundation.layout.Column
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.SwapVert
@@ -49,18 +42,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -72,11 +58,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.foundation.CurvedLayout
 import androidx.wear.compose.foundation.CurvedModifier
 import androidx.wear.compose.foundation.CurvedTextStyle
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.background
 import androidx.wear.compose.foundation.basicCurvedText
-import androidx.wear.compose.foundation.curvedComposable
+import androidx.wear.compose.foundation.lazy.AutoCenteringParams
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyListAnchorType
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.foundation.padding
-import androidx.wear.compose.material.AutoCenteringParams
+import androidx.wear.compose.foundation.rememberActiveFocusRequester
 
 
 import androidx.wear.compose.material.HorizontalPageIndicator
@@ -85,19 +75,17 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.ScalingLazyColumn
-import androidx.wear.compose.material.ScalingLazyListAnchorType
-import androidx.wear.compose.material.ScalingLazyListState
+
+
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
-import androidx.wear.compose.material.rememberScalingLazyListState
+
 import com.h3r3t1c.wearunitconverter.dialogs.UnitPickerListener
-import com.h3r3t1c.wearunitconverter.dialogs.createUnitPickerDialog
+import com.h3r3t1c.wearunitconverter.dialogs.CreateUnitPickerDialog
 import com.h3r3t1c.wearunitconverter.ext.topAlpha
 import com.h3r3t1c.wearunitconverter.presentation.ConverterType.TYPE_TIME
 import com.h3r3t1c.wearunitconverter.presentation.theme.Blue500
 import com.h3r3t1c.wearunitconverter.presentation.theme.WearUnitConverterTheme
-import com.h3r3t1c.wearunitconverter.util.Converter
+import com.h3r3t1c.wearunitconverter.util.ConvertHelper
 import com.h3r3t1c.wearunitconverter.util.UnitType
 import com.h3r3t1c.wearunitconverter.viewmodels.ConvertActivityViewModel
 import kotlinx.coroutines.launch
@@ -165,6 +153,7 @@ fun ConvertWearApp(type:Int, viewModel: ConvertActivityViewModel) {
     }
 }
 
+@OptIn(ExperimentalWearFoundationApi::class)
 @Composable
 fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
     val context = LocalContext.current
@@ -177,7 +166,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
     var showPickerDialog by remember{
         mutableStateOf(false)
     }
-    val focusRequester = remember { FocusRequester() }
+    val focusRequester = rememberActiveFocusRequester()
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberScalingLazyListState()
     val startForResult =
@@ -199,7 +188,6 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                         .fillMaxWidth()
                         .alpha(listState.topAlpha)
                         .padding(top = 4.dp)
-
                 ) {
                     basicCurvedText(
                         textValueTop + " " + UnitType.unitTypeToString(fromUnit),
@@ -213,7 +201,22 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                                 )
                         }
                     )
+                    //curvedText(text=textValueTop + " " + UnitType.unitTypeToString(fromUnit), )
+                    /*curvedComposable {
+
+                        BasicText(
+                            "CurvedWorld",
+                            Modifier
+                                .background(Color.White)
+                                .padding(2.dp),
+                            TextStyle(
+                                color = Color.White,
+                                fontSize = 16.sp,
+                            )
+                        )
+                    }*/
                 }
+
             }
             else{
                 Box(
@@ -222,7 +225,10 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                         .alpha(listState.topAlpha),
                     contentAlignment = Alignment.Center
                 ){
-                    Box(modifier = Modifier.padding(4.dp).background(color = Blue500, shape = MaterialTheme.shapes.large)){
+
+                    Box(modifier = Modifier
+                        .padding(4.dp)
+                        .background(color = Blue500, shape = MaterialTheme.shapes.large)){
                         Text(
                             text = textValueTop + " " + UnitType.unitTypeToString(fromUnit),
                             color = Color.White,
@@ -234,9 +240,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
 
                         )
                     }
-
                 }
-
             }
         }
     ) {
@@ -247,6 +251,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                 .onRotaryScrollEvent {
                     coroutineScope.launch {
                         listState.scrollBy(it.verticalScrollPixels)
+                        listState.animateScrollBy(0f)
                     }
                     true
                 }
@@ -341,7 +346,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
         }
 
         if(showPickerDialog) {
-            createUnitPickerDialog(showPickerDialog, unitsList, unitPickerListener)
+            CreateUnitPickerDialog(showPickerDialog, unitsList, unitPickerListener)
         }
         LaunchedEffect(Unit){
             listState.scrollToItem(0)
@@ -369,7 +374,7 @@ fun ConversionEntry(s:String, i:Int, toUnit:Int, type: Int){
             contentAlignment = Alignment.CenterStart
         ){
             Text(
-                text = Converter.convertUnits(s.toDouble(), toUnit, i),
+                text = ConvertHelper.convertUnits(s.toDouble(), toUnit, i),
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp)
                     .fillMaxWidth(),
@@ -579,7 +584,7 @@ fun PageOne(viewModel: ConvertActivityViewModel, type: Int){
 
             }
             if(showPickerDialog) {
-                createUnitPickerDialog(showPickerDialog, unitsList, unitPickerListener)
+                CreateUnitPickerDialog(showPickerDialog, unitsList, unitPickerListener)
             }
         }
     }

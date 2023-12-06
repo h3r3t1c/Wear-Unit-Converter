@@ -5,7 +5,7 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
-import com.h3r3t1c.wearunitconverter.util.Converter
+import com.h3r3t1c.wearunitconverter.util.ConvertHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -42,7 +42,7 @@ class ConvertActivityViewModel(private val top:Int, bottom:Int, units:Array<Int>
     val topText = _topText.asStateFlow()
 
     private val _bottomText = MutableStateFlow(
-        Converter.convertUnits(0.0, topUnit.value, bottomUnit.value)
+        ConvertHelper.convertUnits(0.0, topUnit.value, bottomUnit.value)
     )
     val bottomText = _bottomText.asStateFlow()
 
@@ -50,7 +50,7 @@ class ConvertActivityViewModel(private val top:Int, bottom:Int, units:Array<Int>
     var activeUnitsList:Array<Int> = unitsList.copyOfRange(1, unitsList.size)
 
     fun updateTopUnit(i:Int){
-        _bottomText.value = Converter.convertUnits(topText.value.toDouble(), i,bottomUnit.value)
+        _bottomText.value = ConvertHelper.convertUnits(topText.value.toDouble(), i,bottomUnit.value)
         _topUnit.value = i
         var index = 0
         for(item in unitsList){
@@ -60,17 +60,17 @@ class ConvertActivityViewModel(private val top:Int, bottom:Int, units:Array<Int>
         }
     }
     fun updateBottomUnit(i:Int){
-        _topText.value = Converter.convertUnits(bottomText.value.toDouble(), i,topUnit.value)
+        _topText.value = ConvertHelper.convertUnits(bottomText.value.toDouble(), i,topUnit.value)
         _bottomUnit.value = i
     }
 
     fun updateTopText(s:String){
         _topText.value = s
-        _bottomText.value = Converter.convertUnits(s.toDouble(), topUnit.value, bottomUnit.value)
+        _bottomText.value = ConvertHelper.convertUnits(s.toDouble(), topUnit.value, bottomUnit.value)
     }
     fun updateBottomText(s:String){
         _bottomText.value = s
-        _topText.value = Converter.convertUnits(s.toDouble(), bottomUnit.value, topUnit.value)
+        _topText.value = ConvertHelper.convertUnits(s.toDouble(), bottomUnit.value, topUnit.value)
     }
 
 

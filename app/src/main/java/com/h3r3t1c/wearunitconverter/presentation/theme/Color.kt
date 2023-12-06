@@ -4,10 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.wear.compose.material.Colors
 import androidx.wear.compose.material.MaterialTheme
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val Red500 = Color(0xffF44336)
 val Red400 = Color(0xFFCF6679)
 
 val Blue500 = Color(0xff2196F3)

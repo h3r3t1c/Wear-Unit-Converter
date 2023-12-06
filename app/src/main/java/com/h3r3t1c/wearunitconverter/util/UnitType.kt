@@ -3,14 +3,15 @@ package com.h3r3t1c.wearunitconverter.util
 import android.icu.text.MeasureFormat
 import android.icu.util.MeasureUnit
 import android.icu.util.ULocale
+import com.h3r3t1c.wearunitconverter.BuildConfig
 import com.h3r3t1c.wearunitconverter.presentation.ConverterType
 import java.util.Locale
 
 object UnitType {
 
-    const val UNIT_TYPE_FAHRENHEIT = 0
-    const val UNIT_TYPE_CELSIUS = 1
-    const val UNIT_TYPE_KELVIN = 2
+    const val UNIT_TYPE_TEMPERATURE_FAHRENHEIT = 0
+    const val UNIT_TYPE_TEMPERATURE_CELSIUS = 1
+    const val UNIT_TYPE_TEMPERATURE_KELVIN = 2
 
     const val UNIT_TYPE_SPEED_MILE_PER_HOUR = 3
     const val UNIT_TYPE_SPEED_FOOT_PER_SECOND = 4
@@ -44,7 +45,7 @@ object UnitType {
     const val UNIT_TYPE_WEIGHT_STONE = 29
 
 
-    val TEMP_UNITS = arrayOf( UNIT_TYPE_FAHRENHEIT,UNIT_TYPE_CELSIUS, UNIT_TYPE_KELVIN)
+    val TEMP_UNITS = arrayOf( UNIT_TYPE_TEMPERATURE_FAHRENHEIT,UNIT_TYPE_TEMPERATURE_CELSIUS, UNIT_TYPE_TEMPERATURE_KELVIN)
     val SPEED_UNITS = arrayOf(UNIT_TYPE_SPEED_MILE_PER_HOUR,UNIT_TYPE_SPEED_FOOT_PER_SECOND,UNIT_TYPE_SPEED_METER_PER_SECOND,UNIT_TYPE_SPEED_KM_PER_HOUR,UNIT_TYPE_SPEED_KNOT)
     val TIME_UNITS = arrayOf(UNIT_TYPE_TIME_MILLS,UNIT_TYPE_TIME_SECOND,UNIT_TYPE_TIME_MINUTE,UNIT_TYPE_TIME_HOUR,UNIT_TYPE_TIME_DAY)
     val LENGTH_UNITS = arrayOf(UNIT_TYPE_LENGTH_FOOT,UNIT_TYPE_LENGTH_KILOMETER,UNIT_TYPE_LENGTH_METER,UNIT_TYPE_LENGTH_CENTIMETER,UNIT_TYPE_LENGTH_MILLIMETER,
@@ -55,6 +56,9 @@ object UnitType {
     private lateinit var unitFormatter:MeasureFormat
     private lateinit var unitFormatterShort:MeasureFormat
 
+    /**
+     *  Important: MeasureFormat does not work with unit testing...
+     */
     fun unitTypeToString(type: Int):String{
         if(!this::unitFormatter.isInitialized) {
             unitFormatter = MeasureFormat.getInstance(
@@ -65,22 +69,22 @@ object UnitType {
             )
         }
         return if(type in 8..12){
-            Converter.supportedTimedUnits[type-8].name.lowercase(Locale.ROOT).replaceFirstChar {
+            ConvertHelper.supportedTimedUnits[type-8].name.lowercase(Locale.ROOT).replaceFirstChar {
                 if (it.isLowerCase()) it.titlecase(
                     Locale.getDefault()
                 ) else it.toString()
             }
         } else
             when(type){
-                UNIT_TYPE_FAHRENHEIT -> unitFormatter.getUnitDisplayName(MeasureUnit.FAHRENHEIT)
-                UNIT_TYPE_CELSIUS -> unitFormatter.getUnitDisplayName(MeasureUnit.CELSIUS)
-                UNIT_TYPE_KELVIN -> unitFormatter.getUnitDisplayName(MeasureUnit.KELVIN)
+                UNIT_TYPE_TEMPERATURE_FAHRENHEIT -> unitFormatter.getUnitDisplayName(MeasureUnit.FAHRENHEIT)
+                UNIT_TYPE_TEMPERATURE_CELSIUS -> unitFormatter.getUnitDisplayName(MeasureUnit.CELSIUS)
+                UNIT_TYPE_TEMPERATURE_KELVIN -> unitFormatter.getUnitDisplayName(MeasureUnit.KELVIN)
                 // speed
                 UNIT_TYPE_SPEED_MILE_PER_HOUR -> if (ULocale.getDefault().equals(ULocale.US)) "mph" else unitFormatter.getUnitDisplayName(MeasureUnit.MILE_PER_HOUR)
                 UNIT_TYPE_SPEED_FOOT_PER_SECOND -> "ft/s"
                 UNIT_TYPE_SPEED_METER_PER_SECOND -> unitFormatter.getUnitDisplayName(MeasureUnit.METER_PER_SECOND)
                 UNIT_TYPE_SPEED_KM_PER_HOUR -> unitFormatter.getUnitDisplayName(MeasureUnit.KILOMETER_PER_HOUR)
-                UNIT_TYPE_SPEED_KNOT-> unitFormatter.getUnitDisplayName(MeasureUnit.KNOT)
+                UNIT_TYPE_SPEED_KNOT-> "kt, kn"
                 // length
                 UNIT_TYPE_LENGTH_FOOT -> unitFormatterShort.getUnitDisplayName(MeasureUnit.FOOT)
                 UNIT_TYPE_LENGTH_KILOMETER -> unitFormatterShort.getUnitDisplayName(MeasureUnit.KILOMETER)
