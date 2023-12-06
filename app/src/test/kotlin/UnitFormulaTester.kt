@@ -56,7 +56,7 @@ class UnitFormulaTester {
     private fun checkMath(numIn:Double, unitIn:Int, unitOut:Int, expectedValue:Double){
         val decimalLen = calcDecimalLen(expectedValue)
         val expectedValueBigDecimal = BigDecimal(expectedValue).setScale(decimalLen, RoundingMode.HALF_UP)
-        val outNum = BigDecimal(ConvertHelper.convertUnitsRaw(numIn, unitIn, unitOut)).setScale(decimalLen, RoundingMode.HALF_UP);
+        val outNum = BigDecimal(ConvertHelper.convertUnitsRaw(numIn, unitIn, unitOut)).setScale(decimalLen, RoundingMode.HALF_UP)
 
         assert(outNum.equals(expectedValueBigDecimal)){
             "From $numIn :: expected: $expectedValueBigDecimal, got:$outNum"
