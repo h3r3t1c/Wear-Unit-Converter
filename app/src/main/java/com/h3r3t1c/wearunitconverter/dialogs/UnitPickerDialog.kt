@@ -98,7 +98,7 @@ fun CreateUnitPickerDialog(show:Boolean, items:Array<Int>, listener: UnitPickerL
 @Composable
 fun CreateOption(i:Int){
     Chip(label = {
-            Text(text = UnitType.unitTypeToString(i), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 18.sp)
+            Text(text = UnitType.unitTypeToString(i, true), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 18.sp)
          },
         onClick = { unitPickerListener.onUnitPick(i)},
         colors = ChipDefaults.primaryChipColors(

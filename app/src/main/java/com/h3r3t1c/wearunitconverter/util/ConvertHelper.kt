@@ -12,14 +12,14 @@ object ConvertHelper {
 
     val supportedTimedUnits = listOf(DurationUnit.MILLISECONDS, DurationUnit.SECONDS, DurationUnit.MINUTES, DurationUnit.HOURS, DurationUnit.DAYS)
 
-    fun fToC(f:Double):Double = (f-32.0)*(0.55555555555)
-    fun fToK(f:Double):Double = (f-32.0)*(0.55555555555)+273.15
+    private fun fToC(f:Double):Double = (f-32.0)*(0.55555555555)
+    private fun fToK(f:Double):Double = (f-32.0)*(0.55555555555)+273.15
 
-    fun cToF(c:Double):Double = (c*(1.8))+32.0
-    fun cToK(c:Double):Double = c+273.15
+    private fun cToF(c:Double):Double = (c*(1.8))+32.0
+    private fun cToK(c:Double):Double = c+273.15
 
-    fun kToF(k:Double):Double = (k-273.15)*(1.8)+32.0
-    fun kToC(k:Double):Double = k-273.15
+    private fun kToF(k:Double):Double = (k-273.15)*(1.8)+32.0
+    private fun kToC(k:Double):Double = k-273.15
 
     @OptIn(ExperimentalTime::class)
     fun convertTime(value:Double, fromUnit: Int, toUnit:Int):String{
@@ -145,7 +145,7 @@ object ConvertHelper {
                     UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 1.1023113109
                     UnitType.UNIT_TYPE_WEIGHT_STONE_UK -> numIn * 157.47304442
                     UnitType.UNIT_TYPE_WEIGHT_POUND -> numIn * 2204.6226218
-                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 2204.6226218
+                    UnitType.UNIT_TYPE_WEIGHT_OUNCE -> numIn * 35273.96195
                     else -> numIn
                 }
             }

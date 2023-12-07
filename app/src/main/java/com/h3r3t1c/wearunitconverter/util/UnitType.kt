@@ -79,9 +79,9 @@ object UnitType {
             }
         } else
             when(type){
-                UNIT_TYPE_TEMPERATURE_FAHRENHEIT -> unitFormatter.getUnitDisplayName(MeasureUnit.FAHRENHEIT)
-                UNIT_TYPE_TEMPERATURE_CELSIUS -> unitFormatter.getUnitDisplayName(MeasureUnit.CELSIUS)
-                UNIT_TYPE_TEMPERATURE_KELVIN -> unitFormatter.getUnitDisplayName(MeasureUnit.KELVIN)
+                UNIT_TYPE_TEMPERATURE_FAHRENHEIT -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.FAHRENHEIT) else unitFormatter.getUnitDisplayName(MeasureUnit.FAHRENHEIT)
+                UNIT_TYPE_TEMPERATURE_CELSIUS -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.CELSIUS) else unitFormatter.getUnitDisplayName(MeasureUnit.CELSIUS)
+                UNIT_TYPE_TEMPERATURE_KELVIN -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.KELVIN) else unitFormatter.getUnitDisplayName(MeasureUnit.KELVIN)
                 // speed
                 UNIT_TYPE_SPEED_MILE_PER_HOUR -> if (ULocale.getDefault().equals(ULocale.US)) "mph" else unitFormatter.getUnitDisplayName(MeasureUnit.MILE_PER_HOUR)
                 UNIT_TYPE_SPEED_FOOT_PER_SECOND -> "ft/s"
@@ -89,14 +89,14 @@ object UnitType {
                 UNIT_TYPE_SPEED_KM_PER_HOUR -> unitFormatter.getUnitDisplayName(MeasureUnit.KILOMETER_PER_HOUR)
                 UNIT_TYPE_SPEED_KNOT-> "kt, kn"
                 // length
-                UNIT_TYPE_LENGTH_FOOT -> unitFormatterShort.getUnitDisplayName(MeasureUnit.FOOT)
-                UNIT_TYPE_LENGTH_KILOMETER -> unitFormatterShort.getUnitDisplayName(MeasureUnit.KILOMETER)
-                UNIT_TYPE_LENGTH_METER -> unitFormatterShort.getUnitDisplayName(MeasureUnit.METER)
-                UNIT_TYPE_LENGTH_CENTIMETER -> unitFormatterShort.getUnitDisplayName(MeasureUnit.CENTIMETER)
-                UNIT_TYPE_LENGTH_MILLIMETER -> unitFormatterShort.getUnitDisplayName(MeasureUnit.MILLIMETER)
-                UNIT_TYPE_LENGTH_MILE -> unitFormatterShort.getUnitDisplayName(MeasureUnit.MILE)
-                UNIT_TYPE_LENGTH_YARD -> unitFormatterShort.getUnitDisplayName(MeasureUnit.YARD)
-                UNIT_TYPE_LENGTH_INCH -> unitFormatterShort.getUnitDisplayName(MeasureUnit.INCH)
+                UNIT_TYPE_LENGTH_FOOT -> unitFormatter.getUnitDisplayName(MeasureUnit.FOOT)
+                UNIT_TYPE_LENGTH_KILOMETER -> unitFormatter.getUnitDisplayName(MeasureUnit.KILOMETER)
+                UNIT_TYPE_LENGTH_METER -> unitFormatter.getUnitDisplayName(MeasureUnit.METER)
+                UNIT_TYPE_LENGTH_CENTIMETER -> unitFormatter.getUnitDisplayName(MeasureUnit.CENTIMETER)
+                UNIT_TYPE_LENGTH_MILLIMETER -> unitFormatter.getUnitDisplayName(MeasureUnit.MILLIMETER)
+                UNIT_TYPE_LENGTH_MILE -> unitFormatter.getUnitDisplayName(MeasureUnit.MILE)
+                UNIT_TYPE_LENGTH_YARD -> unitFormatter.getUnitDisplayName(MeasureUnit.YARD)
+                UNIT_TYPE_LENGTH_INCH -> unitFormatter.getUnitDisplayName(MeasureUnit.INCH)
                 // weight
                 UNIT_TYPE_WEIGHT_POUND -> unitFormatter.getUnitDisplayName(MeasureUnit.POUND)
                 UNIT_TYPE_WEIGHT_OUNCE -> unitFormatter.getUnitDisplayName(MeasureUnit.OUNCE)
