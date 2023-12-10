@@ -11,27 +11,19 @@ import kotlin.time.ExperimentalTime
 
 object ConvertHelper {
 
-    lateinit var numberFormat:DecimalFormat
-    lateinit var timeNumberFormat: DecimalFormat
 
-    val supportedTimedUnits = listOf(DurationUnit.MILLISECONDS, DurationUnit.SECONDS, DurationUnit.MINUTES, DurationUnit.HOURS, DurationUnit.DAYS)
+    private val supportedTimedUnits = listOf(DurationUnit.MILLISECONDS, DurationUnit.SECONDS, DurationUnit.MINUTES, DurationUnit.HOURS, DurationUnit.DAYS)
 
-    private fun fToC(f:Double):Double = (f-32.0)*(0.55555555555)
-    private fun fToK(f:Double):Double = (f-32.0)*(0.55555555555)+273.15
+    private fun fToC(f:Double):Double = (f-32.0)*(0.55555555556)
+    private fun fToK(f:Double):Double = fToC(f)+273.15
 
     private fun cToF(c:Double):Double = (c*(1.8))+32.0
     private fun cToK(c:Double):Double = c+273.15
 
-    private fun kToF(k:Double):Double = (k-273.15)*(1.8)+32.0
+    private fun kToF(k:Double):Double = kToC(k)*(1.8)+32.0
     private fun kToC(k:Double):Double = k-273.15
 
-    @OptIn(ExperimentalTime::class)
-    fun convertTime(value:Double, fromUnit: Int, toUnit:Int):String{
-        if(!this::timeNumberFormat.isInitialized){
-            timeNumberFormat = DecimalFormat("0.####E0")
-        }
-        return convertTimeRaw(value, fromUnit, toUnit).toString()
-    }
+
     @OptIn(ExperimentalTime::class)
     fun convertTimeRaw(value:Double, fromUnit: Int, toUnit:Int):Double{
         return Duration.convert(value, supportedTimedUnits[fromUnit-8], supportedTimedUnits[toUnit-8])
@@ -54,7 +46,7 @@ object ConvertHelper {
                 when(unitOut){
                     UnitType.UNIT_TYPE_LENGTH_FOOT -> numIn * 3280.839895
                     UnitType.UNIT_TYPE_LENGTH_METER -> numIn * 1000.0
-                    UnitType.UNIT_TYPE_LENGTH_CENTIMETER  -> numIn * 100000
+                    UnitType.UNIT_TYPE_LENGTH_CENTIMETER  -> numIn * 100000.0
                     UnitType.UNIT_TYPE_LENGTH_MILLIMETER -> numIn * 1e+6
                     UnitType.UNIT_TYPE_LENGTH_MILE -> numIn * 0.6213711922
                     UnitType.UNIT_TYPE_LENGTH_YARD -> numIn * 1093.6132983
@@ -369,14 +361,7 @@ object ConvertHelper {
         }
     }
     private fun formatNumber(context: Context, d:Double):String{
-        /*if(!this::numberFormat.isInitialized){
-            numberFormat = DecimalFormat("0.####")
-        }
-        val tmp = numberFormat.format(d)
-        return if(tmp.equals("-0")) "0" else tmp*/
-
         val bigDecimal = BigDecimal.valueOf(d)
-
         return bigDecimal.setScale(AppPrefs.getMaxSigDigits(context).coerceAtMost(calcDecimalLen(d)), RoundingMode.UP).toEngineeringString()
     }
     private fun calcDecimalLen(d:Double):Int{

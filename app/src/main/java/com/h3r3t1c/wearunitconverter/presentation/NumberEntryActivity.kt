@@ -96,7 +96,7 @@ fun NumberEntry(activity: Activity?,viewModel: NumberInputViewModel) {
                             maxLines = 2,
                             maxTextSize = 18.sp,
                             minTextSize = 10.sp,
-                            modifier = Modifier.padding(start=24.dp, end = 24.dp)
+                            modifier = Modifier.padding(start=24.dp, end = 4.dp)
                         )
                     }
 
@@ -106,7 +106,7 @@ fun NumberEntry(activity: Activity?,viewModel: NumberInputViewModel) {
                         tint = Color.Green,
                         modifier =
                         Modifier
-                            .padding(end = 32.dp)
+                            .padding(end = 24.dp)
                             .clickable {
                                 val intent = Intent().apply {
                                     putExtra("value", value)

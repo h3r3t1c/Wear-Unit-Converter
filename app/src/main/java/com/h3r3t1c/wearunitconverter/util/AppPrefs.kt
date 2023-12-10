@@ -5,13 +5,10 @@ import android.content.SharedPreferences
 
 object AppPrefs {
 
-    const val PREF_INT_MAX_SIG_DIGITS = "max_sig_digits";
+    private const val PREF_INT_MAX_SIG_DIGITS = "max_sig_digits";
 
-    fun getMaxSigDigits(context: Context):Int{
-        return getAppPrefs(context).getInt(PREF_INT_MAX_SIG_DIGITS, 4)
-    }
+    fun getMaxSigDigits(context: Context):Int = getAppPrefs(context).getInt(PREF_INT_MAX_SIG_DIGITS, 4)
+    fun setMaxSigDigits(context: Context, digits: Int) = getAppPrefs(context).edit().putInt(PREF_INT_MAX_SIG_DIGITS, digits).commit()
+    fun getAppPrefs(context:Context):SharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
-    fun getAppPrefs(context:Context):SharedPreferences{
-        return context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    }
 }

@@ -29,11 +29,12 @@
     <string name="weight">Weight</string>
     <string name="time">Time</string>
     <string name="version">Version</string>
-    <string name="app_github">App GitHub</string>
+    <string name="app_github">App Source</string>
     <string name="email_me">Email Me</string>
     <string name="xda_profile">XDA Profile</string>
     <string name="linkedin_profile">LinkedIn Profile</string>
     <string name="created_by">Created By</string>
     <string name="about">About</string>
     <string name="settings">Settings</string>
+    <string name="continue_on_phone">Continue on phone</string>
 </resources>

@@ -141,7 +141,6 @@ class UnitFormulaTester {
         checkMath(2.0, UnitType.UNIT_TYPE_LENGTH_INCH, UnitType.UNIT_TYPE_LENGTH_MILE, 0.0000315657)
         checkMath(2.0, UnitType.UNIT_TYPE_LENGTH_INCH, UnitType.UNIT_TYPE_LENGTH_YARD, 0.0555555556)
     }
-
     @Test
     fun testMassFormulas(){
         // metric ton to
@@ -233,6 +232,39 @@ class UnitFormulaTester {
         checkMath(2.0, UnitType.UNIT_TYPE_WEIGHT_OUNCE, UnitType.UNIT_TYPE_WEIGHT_TON_US, 0.0000625)
         checkMath(2.0, UnitType.UNIT_TYPE_WEIGHT_OUNCE, UnitType.UNIT_TYPE_WEIGHT_STONE_UK, 0.0089285714)
         checkMath(2.0, UnitType.UNIT_TYPE_WEIGHT_OUNCE, UnitType.UNIT_TYPE_WEIGHT_POUND, 0.125)
+
+    }
+    @Test
+    fun testTimeFormulas(){
+        // milliseconds to
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_MILLS, UnitType.UNIT_TYPE_TIME_SECOND, 0.002)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_MILLS, UnitType.UNIT_TYPE_TIME_MINUTE, 0.0000333333)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_MILLS, UnitType.UNIT_TYPE_TIME_HOUR, 5.555555555E-7)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_MILLS, UnitType.UNIT_TYPE_TIME_DAY, 2.314814814E-8)
+
+        // second to
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_SECOND, UnitType.UNIT_TYPE_TIME_MILLS, 2000.0)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_SECOND, UnitType.UNIT_TYPE_TIME_MINUTE, 0.0333333333)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_SECOND, UnitType.UNIT_TYPE_TIME_HOUR, 0.0005555556)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_SECOND, UnitType.UNIT_TYPE_TIME_DAY, 0.0000231481)
+
+        // minute to
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_MINUTE, UnitType.UNIT_TYPE_TIME_MILLS, 120000.0)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_MINUTE, UnitType.UNIT_TYPE_TIME_SECOND, 120.0)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_MINUTE, UnitType.UNIT_TYPE_TIME_HOUR, 0.0333333333)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_MINUTE, UnitType.UNIT_TYPE_TIME_DAY, 0.0013888889)
+
+        // hour to
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_HOUR, UnitType.UNIT_TYPE_TIME_MILLS, 7200000.0)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_HOUR, UnitType.UNIT_TYPE_TIME_SECOND, 7200.0)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_HOUR, UnitType.UNIT_TYPE_TIME_MINUTE, 120.0)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_HOUR, UnitType.UNIT_TYPE_TIME_DAY, 0.0833333333)
+
+        // day to
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_DAY, UnitType.UNIT_TYPE_TIME_MILLS, 172800000.0)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_DAY, UnitType.UNIT_TYPE_TIME_SECOND, 172800.0)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_DAY, UnitType.UNIT_TYPE_TIME_MINUTE, 2880.0)
+        checkMath(2.0, UnitType.UNIT_TYPE_TIME_DAY, UnitType.UNIT_TYPE_TIME_HOUR, 48.0)
 
     }
     private fun checkMath(numIn:Double, unitIn:Int, unitOut:Int, expectedValue:Double){

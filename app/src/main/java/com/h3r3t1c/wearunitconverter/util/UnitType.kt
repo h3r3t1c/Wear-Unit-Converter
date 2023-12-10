@@ -73,7 +73,7 @@ object UnitType {
                 UNIT_TYPE_TEMPERATURE_KELVIN -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.KELVIN) else unitFormatter.getUnitDisplayName(MeasureUnit.KELVIN)
                 // speed
                 UNIT_TYPE_SPEED_MILE_PER_HOUR -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.MILE_PER_HOUR) else if (ULocale.getDefault().equals(ULocale.US)) "mph" else unitFormatter.getUnitDisplayName(MeasureUnit.MILE_PER_HOUR)
-                UNIT_TYPE_SPEED_FOOT_PER_SECOND -> if(useFull) "foot per second" else "ft/s"
+                UNIT_TYPE_SPEED_FOOT_PER_SECOND -> if(useFull) "feet per second" else "ft/s"
                 UNIT_TYPE_SPEED_METER_PER_SECOND -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.METER_PER_SECOND) else unitFormatter.getUnitDisplayName(MeasureUnit.METER_PER_SECOND)
                 UNIT_TYPE_SPEED_KM_PER_HOUR -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.KILOMETER_PER_HOUR) else unitFormatter.getUnitDisplayName(MeasureUnit.KILOMETER_PER_HOUR)
                 UNIT_TYPE_SPEED_KNOT-> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.KNOT) else unitFormatter.getUnitDisplayName(MeasureUnit.KNOT)

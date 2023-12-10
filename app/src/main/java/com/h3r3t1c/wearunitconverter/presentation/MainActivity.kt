@@ -9,16 +9,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeviceThermostat
 import androidx.compose.material.icons.filled.Email
@@ -165,7 +169,7 @@ fun SettingsPage(){
 
             }
             item{
-                AboutOption(true, title = "Significant Digits", msg = sigDigits.toString(), ico = Icons.Default.Settings){
+                AboutOption(title = "Decimal Length", msg = sigDigits.toString(), ico = Icons.Default.Settings){
                     showDialog = true
                 }
             }
@@ -175,38 +179,45 @@ fun SettingsPage(){
                 }
             }
             item{
-                AboutOption(false, title = stringResource(R.string.created_by), msg = "Thomas Otero", ico = Icons.Default.Person, null)
+                AboutOption(title = stringResource(R.string.created_by), msg = "Thomas Otero", ico = Icons.Default.Person, null)
             }
             item{
-                AboutOption(title = stringResource(R.string.linkedin_profile), msg = null, ico = Icons.Default.Link) {
+                AboutOption(title = stringResource(R.string.linkedin_profile), msg = null, ico = ImageVector.vectorResource(R.drawable.ic_linkedin)) {
                     coroutineScope.launch {
                         openURL("https://www.linkedin.com/in/thomas-otero-5b8aa429/", context)
                     }
                 }
             }
-            item{
+            /*item{
                 AboutOption(title = stringResource(R.string.xda_profile), msg = null, ico = Icons.Default.Link) {
                     coroutineScope.launch {
                         openURL("https://forum.xda-developers.com/m/h3r3t1c.4535362/", context)
                     }
                 }
-            }
+            }*/
+            /*item{
+                AboutOption(title = "Play Store", msg = null, ico = Icons.Default.Link) {
+                    coroutineScope.launch {
+                        openURL("https://github.com/h3r3t1c/Wear-Unit-Converter", context)
+                    }
+                }
+            }*/
             item{
-                AboutOption(title = stringResource(R.string.app_github), msg = null, ico = Icons.Default.Link) {
+                AboutOption(title = stringResource(R.string.app_github), msg = null, ico = ImageVector.vectorResource(R.drawable.ic_github)) {
                     coroutineScope.launch {
                         openURL("https://github.com/h3r3t1c/Wear-Unit-Converter", context)
                     }
                 }
             }
             item{
-                AboutOption(title = stringResource(R.string.email_me), msg = null, ico = Icons.Default.Email) {
+                AboutOption(title = stringResource(R.string.email_me), msg = "th3h3r3t1c@gmail.com", ico = Icons.Default.Email) {
                     coroutineScope.launch {
                         openURL("mailto:th3h3r3t1c@gmail.com", context)
                     }
                 }
             }
             item{
-                AboutOption(false, title = stringResource(R.string.version), msg = BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")", ico = Icons.Default.Info, null)
+                AboutOption(title = stringResource(R.string.version), msg = BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")", ico = Icons.Default.Info, null)
             }
         }
         if(showDialog){
@@ -225,7 +236,7 @@ fun openURL(url:String, context:Context){
 
         ConfirmationOverlay()
             .setType(ConfirmationOverlay.OPEN_ON_PHONE_ANIMATION)
-            .setMessage("Continue on phone")
+            .setMessage(context.getString(R.string.continue_on_phone))
             .setDuration(2000)
             .showOn(context.findActivity())
         val remoteActivityHelper = RemoteActivityHelper(context)
@@ -286,30 +297,36 @@ fun HomePage(){
     }
 }
 @Composable
-fun AboutOption(isEnabled:Boolean = true, title:String, msg:String?, ico: ImageVector, click: (() -> Unit)?){
-    Card(
-        onClick = {
-            if (click != null) {
-                click()
-            }
-        },
-        enabled = isEnabled
-    ) {
+fun AboutOption(title:String, msg:String?, ico: ImageVector, click: (() -> Unit)?){
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 48.dp)
+            .background(Color(0xff212121), RoundedCornerShape(16.dp))
+            .clickable(enabled = click != null,) {
+                if (click != null) {
+                    click()
+                }
+            },
+        contentAlignment = Alignment.CenterStart
+    ){
         Row(
             verticalAlignment = Alignment.CenterVertically,
-
+            modifier = Modifier.padding(6.dp)
         ) {
             Icon(imageVector = ico, contentDescription = null, tint = Color.White)
             Column(
-                modifier = Modifier.padding(start = 6.dp)
+                modifier = Modifier.padding(start = 6.dp, end = 6.dp)
             ) {
                 Text(text = title, color = Color.White)
                 if(msg != null)
-                    Text(text = msg, color = Blue500)
+                    Text(text = msg, color = MaterialTheme.colors.secondary)
             }
 
         }
     }
+
 }
 @Composable
 fun HomeOption(title: String, ico : ImageVector, type:Int){

@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -88,6 +89,7 @@ import com.h3r3t1c.wearunitconverter.dialogs.CreateUnitPickerDialog
 import com.h3r3t1c.wearunitconverter.ext.topAlpha
 import com.h3r3t1c.wearunitconverter.presentation.composables.AutoSizeText
 import com.h3r3t1c.wearunitconverter.presentation.theme.Blue500
+import com.h3r3t1c.wearunitconverter.presentation.theme.Red500
 import com.h3r3t1c.wearunitconverter.presentation.theme.WearUnitConverterTheme
 import com.h3r3t1c.wearunitconverter.util.ConvertHelper
 import com.h3r3t1c.wearunitconverter.util.UnitType
@@ -144,7 +146,8 @@ fun ConvertWearApp(viewModel: ConvertActivityViewModel) {
         Scaffold(
             pageIndicator = { HorizontalPageIndicator(
                 pageIndicatorState = pageIndicatorState,
-                modifier = Modifier.padding(bottom = 2.dp)
+                modifier = Modifier.padding(bottom = 2.dp, start = 2.dp),
+                selectedColor = if(pagerState.currentPage == 0) Color.Black else Color.White
             ) }
         ) {
             HorizontalPager(state = pagerState) { page ->
@@ -195,7 +198,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel){
                 ) {
                     basicCurvedText(
                         textValueTop + " " + UnitType.unitTypeToString(fromUnit),
-                        CurvedModifier.background(color = Blue500, StrokeCap.Round).padding(2.dp),
+                        CurvedModifier.background(color = Red500, StrokeCap.Round).padding(0.dp),
                         overflow = TextOverflow.Ellipsis,
                         style = {
                             CurvedTextStyle(
@@ -217,7 +220,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel){
 
                     Box(modifier = Modifier
                         .padding(4.dp)
-                        .background(color = Blue500, shape = MaterialTheme.shapes.large)){
+                        .background(color = Red500, shape = MaterialTheme.shapes.large)){
                         Text(
                             text = textValueTop + " " + UnitType.unitTypeToString(fromUnit),
                             color = Color.White,
@@ -282,6 +285,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel){
                                 .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)
                                 .fillMaxWidth()
                                 .wrapContentHeight(),
+                            color = Color.White,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -296,7 +300,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel){
                                 showPickerDialog = true
                             }
                             .background(
-                                color = MaterialTheme.colors.primary,
+                                color = Red500,
                                 shape = RoundedCornerShape(
                                     topStart = 0.dp,
                                     topEnd = 0.dp,
@@ -311,6 +315,8 @@ fun PageTwo(viewModel: ConvertActivityViewModel){
                             modifier = Modifier.padding(top=4.dp,bottom=4.dp),
                             text = UnitType.unitTypeToString(fromUnit),
                             textAlign = TextAlign.Center,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -372,7 +378,6 @@ fun ConversionEntry(s:String, fromUnit:Int, toUnit:Int){
     }
 }
 
-@OptIn(ExperimentalWearFoundationApi::class)
 @Composable
 fun PageOne(viewModel: ConvertActivityViewModel){
     val context = LocalContext.current
@@ -420,12 +425,12 @@ fun ConversionEntryTop(viewModel: ConvertActivityViewModel, modifier: Modifier, 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .defaultMinSize(minHeight = 40.dp)
+                .defaultMinSize(minHeight = 48.dp)
                 .clickable {
                     showUnitPickerDialog = true
                 }
                 .background(
-                    color = MaterialTheme.colors.primary,
+                    color = Red500,
                 ),
             contentAlignment = Alignment.Center,
 
@@ -434,6 +439,8 @@ fun ConversionEntryTop(viewModel: ConvertActivityViewModel, modifier: Modifier, 
                 modifier = Modifier,
                 text = UnitType.unitTypeToString(unit),
                 textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
                 color = Color.White
             )
         }
@@ -520,12 +527,12 @@ fun ConversionEntryBottom(viewModel: ConvertActivityViewModel, modifier: Modifie
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .defaultMinSize(minHeight = 40.dp)
+                .defaultMinSize(minHeight = 48.dp)
                 .clickable {
                     showUnitPickerDialog = true
                 }
                 .background(
-                    color = MaterialTheme.colors.primary,
+                    color = Red500,
                 ),
             contentAlignment = Alignment.Center,
 
@@ -534,6 +541,8 @@ fun ConversionEntryBottom(viewModel: ConvertActivityViewModel, modifier: Modifie
                 modifier = Modifier,
                 text = UnitType.unitTypeToString(unit),
                 textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
                 color = Color.White
             )
         }

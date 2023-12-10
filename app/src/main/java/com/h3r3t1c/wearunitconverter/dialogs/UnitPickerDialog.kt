@@ -1,11 +1,17 @@
 package com.h3r3t1c.wearunitconverter.dialogs
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,6 +26,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
@@ -98,7 +105,16 @@ fun CreateUnitPickerDialog(items:Array<Int>, onUnitPick:(selectedUnit:Int)->Unit
 }
 @Composable
 fun CreateOption(i:Int, onUnitPick: (selectedUnit: Int) -> Unit){
-    Card(onClick = { onUnitPick(i) }, modifier = Modifier.fillMaxWidth()) {
-        Text(text = UnitType.unitTypeToString(i, true), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 18.sp)
+    Column(
+        modifier = Modifier.fillMaxWidth()
+            .defaultMinSize(minHeight = 48.dp)
+            .background(Color(0xff212121), shape = RoundedCornerShape(48f))
+            .padding(start = 4.dp, end = 4.dp)
+            .clickable {
+                onUnitPick(i)
+            },
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = UnitType.unitTypeToString(i, true), modifier = Modifier.fillMaxWidth(),color = Color.White, textAlign = TextAlign.Center, fontSize = 18.sp)
     }
 }
