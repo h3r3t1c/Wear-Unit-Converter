@@ -50,6 +50,7 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import com.h3r3t1c.wearunitconverter.presentation.composables.AutoSizeText
 import com.h3r3t1c.wearunitconverter.presentation.theme.WearUnitConverterTheme
 import com.h3r3t1c.wearunitconverter.viewmodels.NumberInputViewModel
 
@@ -81,29 +82,39 @@ fun NumberEntry(activity: Activity?,viewModel: NumberInputViewModel) {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Row (
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Bottom
                 ){
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(
+                        /*Text(
                             text = value,
                             fontSize = 18.sp,
-                            modifier = Modifier.padding(start=32.dp)
+                            modifier = Modifier.padding(start=24.dp)
+                        )*/
+                        AutoSizeText(
+                            text = value,
+                            maxLines = 2,
+                            maxTextSize = 18.sp,
+                            minTextSize = 10.sp,
+                            modifier = Modifier.padding(start=24.dp, end = 24.dp)
                         )
                     }
+
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = "Enter",
                         tint = Color.Green,
                         modifier =
-                            Modifier.padding(end = 32.dp)
-                                .clickable {
-                                    val intent = Intent().apply {
-                                        putExtra("value", value)
-                                        putExtra("loc",activity?.intent?.getStringExtra("loc"))
-                                    }
-                                    activity?.setResult(Activity.RESULT_OK, intent)
-                                    activity?.finish()
+                        Modifier
+                            .padding(end = 32.dp)
+                            .clickable {
+                                val intent = Intent().apply {
+                                    putExtra("value", value)
+                                    putExtra("loc", activity?.intent?.getStringExtra("loc"))
                                 }
+                                activity?.setResult(Activity.RESULT_OK, intent)
+                                activity?.finish()
+                            }
                     )
                 }
 

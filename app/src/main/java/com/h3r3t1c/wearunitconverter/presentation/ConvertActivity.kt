@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
@@ -20,10 +21,14 @@ import androidx.compose.foundation.layout.Box
 
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -47,7 +52,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -79,10 +83,10 @@ import androidx.wear.compose.material.Scaffold
 
 import androidx.wear.compose.material.Text
 
-import com.h3r3t1c.wearunitconverter.dialogs.UnitPickerListener
+
 import com.h3r3t1c.wearunitconverter.dialogs.CreateUnitPickerDialog
 import com.h3r3t1c.wearunitconverter.ext.topAlpha
-import com.h3r3t1c.wearunitconverter.presentation.ConverterType.TYPE_TIME
+import com.h3r3t1c.wearunitconverter.presentation.composables.AutoSizeText
 import com.h3r3t1c.wearunitconverter.presentation.theme.Blue500
 import com.h3r3t1c.wearunitconverter.presentation.theme.WearUnitConverterTheme
 import com.h3r3t1c.wearunitconverter.util.ConvertHelper
@@ -98,7 +102,7 @@ object ConverterType{
     const val TYPE_WEIGHT = 4
 }
 
-lateinit var unitPickerListener:UnitPickerListener
+const val NUMBER_FONT_SIZE = 18
 lateinit var unitsList:Array<Int>
 
 class ConvertActivity : ComponentActivity() {
@@ -108,8 +112,8 @@ class ConvertActivity : ComponentActivity() {
         unitsList = UnitType.getUnitTypeList(type)
         setContent {
             val viewModel:ConvertActivityViewModel = viewModel(factory = ConvertActivityViewModel.provideFactory(
-                unitsList[0], unitsList[1], unitsList, this))
-            ConvertWearApp(type, viewModel)
+                 unitsList[0], unitsList[1], this, unitsList, this))
+            ConvertWearApp(viewModel)
         }
     }
 }
@@ -118,13 +122,13 @@ class ConvertActivity : ComponentActivity() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ConvertWearApp(type:Int, viewModel: ConvertActivityViewModel) {
+fun ConvertWearApp(viewModel: ConvertActivityViewModel) {
     WearUnitConverterTheme {
         val pagerState = rememberPagerState(
             initialPage = 0,
             initialPageOffsetFraction = 0f
         ) {
-            2
+            2 // is the number of pages...
         }
         val pageIndicatorState: PageIndicatorState = remember {
             object : PageIndicatorState {
@@ -140,14 +144,14 @@ fun ConvertWearApp(type:Int, viewModel: ConvertActivityViewModel) {
         Scaffold(
             pageIndicator = { HorizontalPageIndicator(
                 pageIndicatorState = pageIndicatorState,
-                modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+                modifier = Modifier.padding(bottom = 2.dp)
             ) }
         ) {
             HorizontalPager(state = pagerState) { page ->
                 if(page == 0)
-                    PageOne(viewModel, type)
+                    PageOne(viewModel)
                 else
-                    PageTwo(viewModel, type)
+                    PageTwo(viewModel)
             }
         }
     }
@@ -155,7 +159,7 @@ fun ConvertWearApp(type:Int, viewModel: ConvertActivityViewModel) {
 
 @OptIn(ExperimentalWearFoundationApi::class)
 @Composable
-fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
+fun PageTwo(viewModel: ConvertActivityViewModel){
     val context = LocalContext.current
     val isRound = context.resources.configuration.isScreenRound
 
@@ -174,7 +178,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 if(intent?.getStringExtra("loc").equals("top")) {
-                    viewModel.updateTopText(intent?.getStringExtra("value")!!)
+                    viewModel.updateTopText(context, intent?.getStringExtra("value")!!)
                 }
 
             }
@@ -191,32 +195,17 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                 ) {
                     basicCurvedText(
                         textValueTop + " " + UnitType.unitTypeToString(fromUnit),
-                        CurvedModifier.background(color = Blue500, StrokeCap.Round).padding(4.dp),
+                        CurvedModifier.background(color = Blue500, StrokeCap.Round).padding(2.dp),
                         overflow = TextOverflow.Ellipsis,
                         style = {
                             CurvedTextStyle(
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 color = Color.White,
 
                                 )
                         }
                     )
-                    //curvedText(text=textValueTop + " " + UnitType.unitTypeToString(fromUnit), )
-                    /*curvedComposable {
-
-                        BasicText(
-                            "CurvedWorld",
-                            Modifier
-                                .background(Color.White)
-                                .padding(2.dp),
-                            TextStyle(
-                                color = Color.White,
-                                fontSize = 16.sp,
-                            )
-                        )
-                    }*/
                 }
-
             }
             else{
                 Box(
@@ -266,7 +255,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
+                        .padding(top = 8.dp, start = 4.dp, end = 4.dp)
                         .border(
                             width = 2.dp,
                             color = MaterialTheme.colors.surface,
@@ -276,6 +265,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .defaultMinSize(minHeight = 40.dp)
                             .clickable {
                                 val intent: Intent =
                                     Intent(context, NumberEntryActivity::class.java).apply {
@@ -290,22 +280,19 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                             text = textValueTop,
                             modifier = Modifier
                                 .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center,
+                                .fillMaxWidth()
+                                .wrapContentHeight(),
+                            textAlign = TextAlign.Center
                         )
                     }
 
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .height(40.dp)
                             .padding(end = 1.dp, top = 1.dp, bottom = 1.dp)
                             .clickable {
-                                unitPickerListener = UnitPickerListener { value ->
-                                    showPickerDialog = false
-                                    if (value != -1) {
-                                        viewModel.updateTopUnit(value)
-                                    }
-                                }
+
                                 showPickerDialog = true
                             }
                             .background(
@@ -319,17 +306,15 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                             ),
                         contentAlignment = Alignment.Center,
 
-                        ){
+                    ){
                         Text(
                             modifier = Modifier.padding(top=4.dp,bottom=4.dp),
                             text = UnitType.unitTypeToString(fromUnit),
                             textAlign = TextAlign.Center,
-                            fontWeight = if(type ==TYPE_TIME) FontWeight.Normal else FontWeight.Bold
                         )
                     }
                 }
             }
-            ////
             item{
                 Box(modifier = Modifier
                     .fillMaxWidth()
@@ -338,15 +323,19 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
                 }
             }
 
-            ////
             items(viewModel.activeUnitsList.size){ index->
-                ConversionEntry(s = textValueTop, i = viewModel.activeUnitsList[index], toUnit = fromUnit, type)
+                ConversionEntry(s = textValueTop, fromUnit = viewModel.activeUnitsList[index], toUnit = fromUnit)
             }
 
         }
 
         if(showPickerDialog) {
-            CreateUnitPickerDialog(showPickerDialog, unitsList, unitPickerListener)
+            CreateUnitPickerDialog(unitsList){value ->
+                showPickerDialog = false
+                if (value != -1) {
+                    viewModel.updateTopUnit(context, value)
+                }
+            }
         }
         LaunchedEffect(Unit){
             listState.scrollToItem(0)
@@ -355,242 +344,207 @@ fun PageTwo(viewModel: ConvertActivityViewModel, type: Int){
     }
 }
 @Composable
-fun ConversionEntry(s:String, i:Int, toUnit:Int, type: Int){
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp)
-
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colors.surface,
-                shape = RoundedCornerShape(size = 16.dp)
-            )
-
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(),
-            contentAlignment = Alignment.CenterStart
-        ){
-            Text(
-                text = ConvertHelper.convertUnits(s.toDouble(), toUnit, i),
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp)
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 1.dp, top = 1.dp, bottom = 1.dp)
-                .background(
-                    color = MaterialTheme.colors.surface,
-                    shape = RoundedCornerShape(
-                        topStart = 0.dp,
-                        topEnd = 0.dp,
-                        bottomEnd = 16.dp,
-                        bottomStart = 16.dp
-                    ),
-                ),
-            contentAlignment = Alignment.Center
-        ){
-            Text(
-                modifier = Modifier.padding(top=4.dp,bottom=4.dp),
-                text = UnitType.unitTypeToString(i),
-                textAlign = TextAlign.Center,
-                fontWeight = if(type ==TYPE_TIME) FontWeight.Normal else FontWeight.Bold
-            )
-        }
-
-    }
-}
-@Composable
-fun PageOne(viewModel: ConvertActivityViewModel, type: Int){
+fun ConversionEntry(s:String, fromUnit:Int, toUnit:Int){
     val context = LocalContext.current
-
-    val fromUnit = viewModel.topUnit.collectAsState().value
-    val toUnit = viewModel.bottomUnit.collectAsState().value
-
-    val textValueTop = viewModel.topText.collectAsState().value
-    val textValueBottom = viewModel.bottomText.collectAsState().value
-
-    var showPickerDialog by remember{
+    var showFull by remember { // this state is lost while scrolling but that's fine for now...
         mutableStateOf(false)
     }
+    val txt = remember(s, fromUnit, toUnit, showFull) {
+        "${ConvertHelper.convertUnits(context, s.toDouble(), toUnit, fromUnit)} ${UnitType.unitTypeToString(fromUnit, showFull)}"
+    }
+    Column(
+        modifier = Modifier
+            .padding(start = 8.dp, end = 8.dp)
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(Color(0xff212121), shape = RoundedCornerShape(16.dp))
+            .clickable {
+                showFull = !showFull
+            },
+    ) {
+        Text(
+            text = txt,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+        )
+    }
+}
 
+@OptIn(ExperimentalWearFoundationApi::class)
+@Composable
+fun PageOne(viewModel: ConvertActivityViewModel){
+    val context = LocalContext.current
     val startForResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 if(intent?.getStringExtra("loc").equals("top")) {
-                    viewModel.updateTopText(intent?.getStringExtra("value")!!)
+                    viewModel.updateTopText(context, intent?.getStringExtra("value")!!)
                 }
                 else{
-                    viewModel.updateBottomText(intent?.getStringExtra("value")!!)
+                    viewModel.updateBottomText(context, intent?.getStringExtra("value")!!)
                 }
             }
         }
+
     Scaffold(
 
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background),
+                .background(MaterialTheme.colors.background)
+
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(top = 24.dp, start = 32.dp, end = 32.dp)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colors.surface,
-                        shape = RoundedCornerShape(size = 16.dp)
-                    )
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .clickable {
-                            val intent: Intent =
-                                Intent(context, NumberEntryActivity::class.java).apply {
-                                    putExtra("value", textValueTop)
-                                    putExtra("loc", "top")
-                                }
-                            startForResult.launch(intent)
-                        },
-                    contentAlignment = Alignment.CenterStart
-                ){
-                    Text(
-                        text = textValueTop,
-                        modifier = Modifier
-                            .padding(start = 8.dp, end = 8.dp)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                    )
-                }
+            ConversionEntryTop(viewModel, Modifier.weight(1f), startForResult)
+            Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(color = Color(0xff333333)))
+            ConversionEntryBottom(viewModel, Modifier.weight(1f), startForResult)
+        }
+    }
+}
+@Composable
+fun ConversionEntryTop(viewModel: ConvertActivityViewModel, modifier: Modifier, startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>){
+    val context = LocalContext.current
+    val unit = viewModel.topUnit.collectAsState().value
+    val text = viewModel.topText.collectAsState().value
+    var showUnitPickerDialog by remember {
+        mutableStateOf(false)
+    }
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(end = 1.dp, top = 1.dp, bottom = 1.dp)
-                        .clickable {
-                            unitPickerListener = UnitPickerListener { value ->
-                                showPickerDialog = false
-                                if (value != -1) {
-                                    viewModel.updateTopUnit(value)
-                                }
-                            }
-                            showPickerDialog = true
-                        }
-                        .background(
-                            color = MaterialTheme.colors.primary,
-                            shape = RoundedCornerShape(
-                                topStart = 0.dp,
-                                topEnd = 0.dp,
-                                bottomEnd = 16.dp,
-                                bottomStart = 16.dp
-                            ),
-                        ),
-                    contentAlignment = Alignment.Center,
-
-                    ){
-                    Text(
-                        modifier = Modifier,
-                        text = UnitType.unitTypeToString(fromUnit),
-                        textAlign = TextAlign.Center,
-                        fontWeight = if(type ==TYPE_TIME) FontWeight.Normal else FontWeight.Bold
-                    )
-                }
-            }
-            ////
-            Box(modifier = Modifier
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(4.dp), contentAlignment = Alignment.Center){
-                Icon(imageVector = Icons.Default.SwapVert, contentDescription = "", tint = Color.White)
-            }
-            ////
-            Column(
+                .defaultMinSize(minHeight = 40.dp)
+                .clickable {
+                    showUnitPickerDialog = true
+                }
+                .background(
+                    color = MaterialTheme.colors.primary,
+                ),
+            contentAlignment = Alignment.Center,
+
+        ){
+            Text(
+                modifier = Modifier,
+                text = UnitType.unitTypeToString(unit),
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .clickable {
+                    val intent: Intent =
+                        Intent(context, NumberEntryActivity::class.java).apply {
+                            putExtra("value", text)
+                            putExtra("loc", "top")
+                        }
+                    startForResult.launch(intent)
+                },
+            contentAlignment = Alignment.CenterStart
+        ){
+
+            AutoSizeText(
+                text = text,
+                color = Color.White,
+                maxLines = 2,
+                alignment = Alignment.Center,
+                minTextSize = 12.sp,
+                maxTextSize = 24.sp,
                 modifier = Modifier
+                    .padding(start = 12.dp, end = 12.dp)
                     .fillMaxWidth()
-                    .weight(1f)
-                    .padding(bottom = 24.dp, start = 32.dp, end = 32.dp)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colors.surface,
-                        shape = RoundedCornerShape(size = 16.dp)
-                    )
-
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .clickable {
-                            val intent: Intent =
-                                Intent(context, NumberEntryActivity::class.java).apply {
-                                    putExtra("value", textValueBottom)
-                                    putExtra("loc", "bottom")
-                                }
-                            startForResult.launch(intent)
-                        },
-                    contentAlignment = Alignment.CenterStart
-                ){
-                    Text(
-                        text = textValueBottom,
-                        modifier = Modifier
-                            .padding(start = 8.dp, end = 8.dp)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(end = 1.dp, top = 1.dp, bottom = 1.dp)
-                        .background(
-                            color = MaterialTheme.colors.primary,
-                            shape = RoundedCornerShape(
-                                topStart = 0.dp,
-                                topEnd = 0.dp,
-                                bottomEnd = 16.dp,
-                                bottomStart = 16.dp
-                            ),
-                        )
-                        .clickable {
-                            unitPickerListener = UnitPickerListener { value ->
-                                showPickerDialog = false
-                                if (value != -1) {
-                                    viewModel.updateBottomUnit(value)
-                                }
-                            }
-                            showPickerDialog = true
-                        },
-                    contentAlignment = Alignment.Center
-                ){
-                    Text(
-                        modifier = Modifier,
-                        text = UnitType.unitTypeToString(toUnit),
-                        textAlign = TextAlign.Center,
-                        fontWeight = if(type ==TYPE_TIME) FontWeight.Normal else FontWeight.Bold
-                    )
-                }
-
-            }
-            if(showPickerDialog) {
-                CreateUnitPickerDialog(showPickerDialog, unitsList, unitPickerListener)
+                    .wrapContentHeight(),
+            )
+        }
+    }
+    if(showUnitPickerDialog) {
+        CreateUnitPickerDialog(unitsList){value ->
+            showUnitPickerDialog = false
+            if (value != -1) {
+                viewModel.updateTopUnit(context, value)
             }
         }
     }
 }
-@Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
-fun DefaultPreview2() {
-    //ConvertWearApp(0, null)
+fun ConversionEntryBottom(viewModel: ConvertActivityViewModel, modifier: Modifier, startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>){
+    val context = LocalContext.current
+    val unit = viewModel.bottomUnit.collectAsState().value
+    val text = viewModel.bottomText.collectAsState().value
+    var showUnitPickerDialog by remember {
+        mutableStateOf(false)
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .clickable {
+                    val intent: Intent =
+                        Intent(context, NumberEntryActivity::class.java).apply {
+                            putExtra("value", text)
+                            putExtra("loc", "bottom")
+                        }
+                    startForResult.launch(intent)
+                },
+            contentAlignment = Alignment.CenterStart
+        ){
+            AutoSizeText(
+                text = text,
+                color = Color.White,
+                maxLines = 2,
+                alignment = Alignment.Center,
+                minTextSize = 12.sp,
+                maxTextSize = 24.sp,
+                modifier = Modifier
+                    .padding(start = 12.dp, end = 12.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 40.dp)
+                .clickable {
+                    showUnitPickerDialog = true
+                }
+                .background(
+                    color = MaterialTheme.colors.primary,
+                ),
+            contentAlignment = Alignment.Center,
+
+            ){
+            Text(
+                modifier = Modifier,
+                text = UnitType.unitTypeToString(unit),
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+        }
+    }
+    if(showUnitPickerDialog) {
+        CreateUnitPickerDialog(unitsList){value ->
+            showUnitPickerDialog = false
+            if (value != -1) {
+                viewModel.updateBottomUnit(context, value)
+            }
+        }
+    }
 }
+

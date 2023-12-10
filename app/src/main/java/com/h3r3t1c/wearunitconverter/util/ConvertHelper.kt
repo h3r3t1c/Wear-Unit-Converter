@@ -1,6 +1,10 @@
 package com.h3r3t1c.wearunitconverter.util
 
+import android.content.Context
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.DecimalFormat
+import kotlin.math.abs
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
@@ -139,7 +143,7 @@ object ConvertHelper {
             UnitType.UNIT_TYPE_WEIGHT_TON_METRIC -> {
                 when (unitOut) {
                     UnitType.UNIT_TYPE_WEIGHT_KILOGRAM -> numIn * 1000.0
-                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 1000000
+                    UnitType.UNIT_TYPE_WEIGHT_GRAM -> numIn * 1000000.0
                     UnitType.UNIT_TYPE_WEIGHT_MILLIGRAM -> numIn * 1000000000
                     UnitType.UNIT_TYPE_WEIGHT_TON_UK -> numIn * 0.9842065276
                     UnitType.UNIT_TYPE_WEIGHT_TON_US -> numIn * 1.1023113109
@@ -348,8 +352,8 @@ object ConvertHelper {
             else -> numIn
         }
     }
-    fun convertUnits(numIn:Double, unitIn:Int, unitOut:Int):String{
-        return formatNumber(convertUnitsRaw(numIn, unitIn, unitOut))
+    fun convertUnits(context: Context, numIn:Double, unitIn:Int, unitOut:Int):String{
+        return formatNumber(context, convertUnitsRaw(numIn, unitIn, unitOut))
     }
     fun convertUnitsRaw(numIn:Double, unitIn:Int, unitOut:Int):Double{
         return if(UnitType.TIME_UNITS.contains(unitIn)){
@@ -364,11 +368,20 @@ object ConvertHelper {
             convertTemperature(numIn,unitIn, unitOut)
         }
     }
-    private fun formatNumber(d:Double?):String{
-        if(!this::numberFormat.isInitialized){
+    private fun formatNumber(context: Context, d:Double):String{
+        /*if(!this::numberFormat.isInitialized){
             numberFormat = DecimalFormat("0.####")
         }
         val tmp = numberFormat.format(d)
-        return if(tmp.equals("-0")) "0" else tmp
+        return if(tmp.equals("-0")) "0" else tmp*/
+
+        val bigDecimal = BigDecimal.valueOf(d)
+
+        return bigDecimal.setScale(AppPrefs.getMaxSigDigits(context).coerceAtMost(calcDecimalLen(d)), RoundingMode.UP).toEngineeringString()
+    }
+    private fun calcDecimalLen(d:Double):Int{
+        val text = abs(d).toString()
+        val integerPlaces = text.indexOf('.')
+        return text.length - integerPlaces - 1
     }
 }

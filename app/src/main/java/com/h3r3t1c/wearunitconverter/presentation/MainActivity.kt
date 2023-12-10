@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -28,22 +27,26 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Scale
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Straighten
-import androidx.compose.material.icons.filled.Web
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,10 +72,12 @@ import androidx.wear.remote.interactions.RemoteActivityHelper
 import androidx.wear.widget.ConfirmationOverlay
 import com.h3r3t1c.wearunitconverter.BuildConfig
 import com.h3r3t1c.wearunitconverter.R
+import com.h3r3t1c.wearunitconverter.dialogs.DecimalLengthDialog
 import com.h3r3t1c.wearunitconverter.ext.findActivity
 import com.h3r3t1c.wearunitconverter.presentation.theme.Blue500
 import com.h3r3t1c.wearunitconverter.presentation.theme.Red500
 import com.h3r3t1c.wearunitconverter.presentation.theme.WearUnitConverterTheme
+import com.h3r3t1c.wearunitconverter.util.AppPrefs
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -109,25 +114,31 @@ fun WearApp() {
         Scaffold(
             pageIndicator = { HorizontalPageIndicator(
                 pageIndicatorState = pageIndicatorState,
-                modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp)
             ) }
         ) {
             HorizontalPager(state = pagerState) { page ->
                 if(page == 0)
                     HomePage()
                 else
-                    AboutPage()
+                    SettingsPage()
             }
         }
     }
 }
 @OptIn(ExperimentalWearFoundationApi::class)
 @Composable
-fun AboutPage(){
+fun SettingsPage(){
     val listState = rememberScalingLazyListState()
     val focusRequester = rememberActiveFocusRequester()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    var sigDigits by remember {
+        mutableIntStateOf(AppPrefs.getMaxSigDigits(context))
+    }
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         positionIndicator = {PositionIndicator(scalingLazyListState = listState)}
@@ -147,6 +158,17 @@ fun AboutPage(){
                 .focusable(),
             state = listState
         ) {
+            item {
+                ListHeader {
+                    Text(text = stringResource(R.string.settings), color = Red500)
+                }
+
+            }
+            item{
+                AboutOption(true, title = "Significant Digits", msg = sigDigits.toString(), ico = Icons.Default.Settings){
+                    showDialog = true
+                }
+            }
             item {
                 ListHeader {
                     Text(text = stringResource(R.string.about), color = Red500)
@@ -187,16 +209,24 @@ fun AboutPage(){
                 AboutOption(false, title = stringResource(R.string.version), msg = BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")", ico = Icons.Default.Info, null)
             }
         }
+        if(showDialog){
+            DecimalLengthDialog(sigDigits) { selectedVal ->
+                showDialog = false
+                sigDigits = selectedVal
+            }
+        }
         LaunchedEffect(true){
             focusRequester.requestFocus()
         }
     }
 }
+
 fun openURL(url:String, context:Context){
 
         ConfirmationOverlay()
             .setType(ConfirmationOverlay.OPEN_ON_PHONE_ANIMATION)
-            .setDuration(500)
+            .setMessage("Continue on phone")
+            .setDuration(2000)
             .showOn(context.findActivity())
         val remoteActivityHelper = RemoteActivityHelper(context)
         remoteActivityHelper.startRemoteActivity(
@@ -269,11 +299,11 @@ fun AboutOption(isEnabled:Boolean = true, title:String, msg:String?, ico: ImageV
             verticalAlignment = Alignment.CenterVertically,
 
         ) {
-            Icon(imageVector = ico, contentDescription = null)
+            Icon(imageVector = ico, contentDescription = null, tint = Color.White)
             Column(
                 modifier = Modifier.padding(start = 6.dp)
             ) {
-                Text(text = title)
+                Text(text = title, color = Color.White)
                 if(msg != null)
                     Text(text = msg, color = Blue500)
             }

@@ -1,0 +1,3 @@
+* Add tests to time units
+* Improve number input
+* Add picker for number of digits

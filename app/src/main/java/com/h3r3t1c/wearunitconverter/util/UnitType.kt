@@ -44,16 +44,15 @@ object UnitType {
     const val UNIT_TYPE_WEIGHT_STONE_UK = 29
 
 
-    val TEMP_UNITS = arrayOf( UNIT_TYPE_TEMPERATURE_FAHRENHEIT,UNIT_TYPE_TEMPERATURE_CELSIUS, UNIT_TYPE_TEMPERATURE_KELVIN)
+    val TEMPERATURE_UNITS = arrayOf( UNIT_TYPE_TEMPERATURE_FAHRENHEIT,UNIT_TYPE_TEMPERATURE_CELSIUS, UNIT_TYPE_TEMPERATURE_KELVIN)
     val SPEED_UNITS = arrayOf(UNIT_TYPE_SPEED_MILE_PER_HOUR,UNIT_TYPE_SPEED_FOOT_PER_SECOND,UNIT_TYPE_SPEED_METER_PER_SECOND,UNIT_TYPE_SPEED_KM_PER_HOUR,UNIT_TYPE_SPEED_KNOT)
     val TIME_UNITS = arrayOf(UNIT_TYPE_TIME_MILLS,UNIT_TYPE_TIME_SECOND,UNIT_TYPE_TIME_MINUTE,UNIT_TYPE_TIME_HOUR,UNIT_TYPE_TIME_DAY)
     val LENGTH_UNITS = arrayOf(UNIT_TYPE_LENGTH_FOOT,UNIT_TYPE_LENGTH_KILOMETER,UNIT_TYPE_LENGTH_METER,UNIT_TYPE_LENGTH_CENTIMETER,UNIT_TYPE_LENGTH_MILLIMETER,
-        UNIT_TYPE_LENGTH_MILE, UNIT_TYPE_LENGTH_YARD, UNIT_TYPE_LENGTH_INCH)
+                                    UNIT_TYPE_LENGTH_MILE, UNIT_TYPE_LENGTH_YARD, UNIT_TYPE_LENGTH_INCH)
     val WEIGHT_UNITS = arrayOf(UNIT_TYPE_WEIGHT_POUND,UNIT_TYPE_WEIGHT_OUNCE,UNIT_TYPE_WEIGHT_TON_METRIC,UNIT_TYPE_WEIGHT_KILOGRAM,UNIT_TYPE_WEIGHT_GRAM,
-        UNIT_TYPE_WEIGHT_MILLIGRAM, UNIT_TYPE_WEIGHT_TON_UK, UNIT_TYPE_WEIGHT_TON_US, UNIT_TYPE_WEIGHT_STONE_UK)
+                                    UNIT_TYPE_WEIGHT_MILLIGRAM, UNIT_TYPE_WEIGHT_TON_UK, UNIT_TYPE_WEIGHT_TON_US, UNIT_TYPE_WEIGHT_STONE_UK)
 
     private lateinit var unitFormatter:MeasureFormat
-    private lateinit var unitFormatterShort:MeasureFormat
     private lateinit var unitFormatterLong : MeasureFormat
 
     /**
@@ -62,62 +61,58 @@ object UnitType {
     fun unitTypeToString(type: Int, useFull:Boolean = false):String{
         if(!this::unitFormatter.isInitialized) {
             unitFormatter = MeasureFormat.getInstance(
-                ULocale.getDefault(), MeasureFormat.FormatWidth.NARROW
-            )
-            unitFormatterShort = MeasureFormat.getInstance(
-                ULocale.getDefault(), MeasureFormat.FormatWidth.SHORT
+                ULocale.getDefault(), MeasureFormat.FormatWidth.NUMERIC
             )
             unitFormatterLong = MeasureFormat.getInstance(
                 ULocale.getDefault(), MeasureFormat.FormatWidth.WIDE
             )
         }
-        return if(type in 8..12){
-            ConvertHelper.supportedTimedUnits[type-8].name.lowercase(Locale.ROOT).replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(
-                    Locale.getDefault()
-                ) else it.toString()
-            }
-        } else
-            when(type){
+        return when(type){
                 UNIT_TYPE_TEMPERATURE_FAHRENHEIT -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.FAHRENHEIT) else unitFormatter.getUnitDisplayName(MeasureUnit.FAHRENHEIT)
                 UNIT_TYPE_TEMPERATURE_CELSIUS -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.CELSIUS) else unitFormatter.getUnitDisplayName(MeasureUnit.CELSIUS)
                 UNIT_TYPE_TEMPERATURE_KELVIN -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.KELVIN) else unitFormatter.getUnitDisplayName(MeasureUnit.KELVIN)
                 // speed
-                UNIT_TYPE_SPEED_MILE_PER_HOUR -> if (ULocale.getDefault().equals(ULocale.US)) "mph" else unitFormatter.getUnitDisplayName(MeasureUnit.MILE_PER_HOUR)
-                UNIT_TYPE_SPEED_FOOT_PER_SECOND -> "ft/s"
-                UNIT_TYPE_SPEED_METER_PER_SECOND -> unitFormatter.getUnitDisplayName(MeasureUnit.METER_PER_SECOND)
-                UNIT_TYPE_SPEED_KM_PER_HOUR -> unitFormatter.getUnitDisplayName(MeasureUnit.KILOMETER_PER_HOUR)
-                UNIT_TYPE_SPEED_KNOT-> "kt, kn"
+                UNIT_TYPE_SPEED_MILE_PER_HOUR -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.MILE_PER_HOUR) else if (ULocale.getDefault().equals(ULocale.US)) "mph" else unitFormatter.getUnitDisplayName(MeasureUnit.MILE_PER_HOUR)
+                UNIT_TYPE_SPEED_FOOT_PER_SECOND -> if(useFull) "foot per second" else "ft/s"
+                UNIT_TYPE_SPEED_METER_PER_SECOND -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.METER_PER_SECOND) else unitFormatter.getUnitDisplayName(MeasureUnit.METER_PER_SECOND)
+                UNIT_TYPE_SPEED_KM_PER_HOUR -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.KILOMETER_PER_HOUR) else unitFormatter.getUnitDisplayName(MeasureUnit.KILOMETER_PER_HOUR)
+                UNIT_TYPE_SPEED_KNOT-> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.KNOT) else unitFormatter.getUnitDisplayName(MeasureUnit.KNOT)
                 // length
-                UNIT_TYPE_LENGTH_FOOT -> unitFormatter.getUnitDisplayName(MeasureUnit.FOOT)
-                UNIT_TYPE_LENGTH_KILOMETER -> unitFormatter.getUnitDisplayName(MeasureUnit.KILOMETER)
-                UNIT_TYPE_LENGTH_METER -> unitFormatter.getUnitDisplayName(MeasureUnit.METER)
-                UNIT_TYPE_LENGTH_CENTIMETER -> unitFormatter.getUnitDisplayName(MeasureUnit.CENTIMETER)
-                UNIT_TYPE_LENGTH_MILLIMETER -> unitFormatter.getUnitDisplayName(MeasureUnit.MILLIMETER)
-                UNIT_TYPE_LENGTH_MILE -> unitFormatter.getUnitDisplayName(MeasureUnit.MILE)
-                UNIT_TYPE_LENGTH_YARD -> unitFormatter.getUnitDisplayName(MeasureUnit.YARD)
-                UNIT_TYPE_LENGTH_INCH -> unitFormatter.getUnitDisplayName(MeasureUnit.INCH)
+                UNIT_TYPE_LENGTH_FOOT -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.FOOT) else unitFormatter.getUnitDisplayName(MeasureUnit.FOOT)
+                UNIT_TYPE_LENGTH_KILOMETER -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.KILOMETER) else unitFormatter.getUnitDisplayName(MeasureUnit.KILOMETER)
+                UNIT_TYPE_LENGTH_METER -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.METER) else unitFormatter.getUnitDisplayName(MeasureUnit.METER)
+                UNIT_TYPE_LENGTH_CENTIMETER -> if (useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.CENTIMETER) else unitFormatter.getUnitDisplayName(MeasureUnit.CENTIMETER)
+                UNIT_TYPE_LENGTH_MILLIMETER -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.MILLIMETER) else unitFormatter.getUnitDisplayName(MeasureUnit.MILLIMETER)
+                UNIT_TYPE_LENGTH_MILE -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.MILE) else unitFormatter.getUnitDisplayName(MeasureUnit.MILE)
+                UNIT_TYPE_LENGTH_YARD -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.YARD) else unitFormatter.getUnitDisplayName(MeasureUnit.YARD)
+                UNIT_TYPE_LENGTH_INCH -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.INCH) else unitFormatter.getUnitDisplayName(MeasureUnit.INCH)
                 // weight
-                UNIT_TYPE_WEIGHT_POUND -> unitFormatter.getUnitDisplayName(MeasureUnit.POUND)
-                UNIT_TYPE_WEIGHT_OUNCE -> unitFormatter.getUnitDisplayName(MeasureUnit.OUNCE)
-                UNIT_TYPE_WEIGHT_TON_METRIC -> "ton (metric)"
-                UNIT_TYPE_WEIGHT_KILOGRAM -> unitFormatter.getUnitDisplayName(MeasureUnit.KILOGRAM)
-                UNIT_TYPE_WEIGHT_GRAM -> unitFormatter.getUnitDisplayName(MeasureUnit.GRAM)
-                UNIT_TYPE_WEIGHT_MILLIGRAM -> unitFormatter.getUnitDisplayName(MeasureUnit.MILLIGRAM)
+                UNIT_TYPE_WEIGHT_POUND -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.POUND) else unitFormatter.getUnitDisplayName(MeasureUnit.POUND)
+                UNIT_TYPE_WEIGHT_OUNCE -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.OUNCE) else unitFormatter.getUnitDisplayName(MeasureUnit.OUNCE)
+                UNIT_TYPE_WEIGHT_TON_METRIC -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.METRIC_TON) else unitFormatter.getUnitDisplayName(MeasureUnit.METRIC_TON)
+                UNIT_TYPE_WEIGHT_KILOGRAM -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.KILOGRAM) else unitFormatter.getUnitDisplayName(MeasureUnit.KILOGRAM)
+                UNIT_TYPE_WEIGHT_GRAM -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.GRAM) else unitFormatter.getUnitDisplayName(MeasureUnit.GRAM)
+                UNIT_TYPE_WEIGHT_MILLIGRAM -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.MILLIGRAM) else unitFormatter.getUnitDisplayName(MeasureUnit.MILLIGRAM)
                 UNIT_TYPE_WEIGHT_TON_UK -> "ton (UK)"
                 UNIT_TYPE_WEIGHT_TON_US -> "ton (US)"
-                UNIT_TYPE_WEIGHT_STONE_UK -> unitFormatter.getUnitDisplayName(MeasureUnit.STONE)
+                UNIT_TYPE_WEIGHT_STONE_UK -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.STONE) else unitFormatter.getUnitDisplayName(MeasureUnit.STONE)
+                // time
+                UNIT_TYPE_TIME_MILLS -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.MILLISECOND) else unitFormatter.getUnitDisplayName(MeasureUnit.MILLISECOND)
+                UNIT_TYPE_TIME_SECOND -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.SECOND) else unitFormatter.getUnitDisplayName(MeasureUnit.SECOND)
+                UNIT_TYPE_TIME_MINUTE -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.MINUTE) else unitFormatter.getUnitDisplayName(MeasureUnit.MINUTE)
+                UNIT_TYPE_TIME_HOUR -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.HOUR) else unitFormatter.getUnitDisplayName(MeasureUnit.HOUR)
+                UNIT_TYPE_TIME_DAY -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.DAY) else unitFormatter.getUnitDisplayName(MeasureUnit.DAY)
                 else ->"?"
             }
     }
     fun getUnitTypeList(type:Int):Array<Int>{
         return when(type){
-            ConverterType.TYPE_TEMPERATURE -> TEMP_UNITS
+            ConverterType.TYPE_TEMPERATURE -> TEMPERATURE_UNITS
             ConverterType.TYPE_SPEED -> SPEED_UNITS
             ConverterType.TYPE_TIME -> TIME_UNITS
             ConverterType.TYPE_LENGTH -> LENGTH_UNITS
             ConverterType.TYPE_WEIGHT -> WEIGHT_UNITS
-            else -> TEMP_UNITS
+            else -> TEMPERATURE_UNITS
         }
     }
 

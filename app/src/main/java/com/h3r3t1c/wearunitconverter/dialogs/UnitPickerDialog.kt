@@ -25,6 +25,7 @@ import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.ListHeader
@@ -39,16 +40,13 @@ import com.h3r3t1c.wearunitconverter.presentation.theme.Red500
 import com.h3r3t1c.wearunitconverter.util.UnitType
 import kotlinx.coroutines.launch
 
-fun interface UnitPickerListener{
-    fun onUnitPick(value:Int)
-}
-lateinit var unitPickerListener:UnitPickerListener
+
 @OptIn(ExperimentalWearFoundationApi::class)
 @Composable
-fun CreateUnitPickerDialog(show:Boolean, items:Array<Int>, listener: UnitPickerListener){
-    unitPickerListener = listener
+fun CreateUnitPickerDialog(items:Array<Int>, onUnitPick:(selectedUnit:Int)->Unit){
+
     var showDialog by remember{
-        mutableStateOf(show)
+        mutableStateOf(true)
     }
     val focusRequester = rememberActiveFocusRequester()
     val coroutineScope = rememberCoroutineScope()
@@ -56,7 +54,7 @@ fun CreateUnitPickerDialog(show:Boolean, items:Array<Int>, listener: UnitPickerL
     Dialog(showDialog = showDialog,
         onDismissRequest = {
             showDialog = false
-            listener.onUnitPick(-1)
+            onUnitPick(-1)
         },
         content ={
             Scaffold(
@@ -83,8 +81,11 @@ fun CreateUnitPickerDialog(show:Boolean, items:Array<Int>, listener: UnitPickerL
                             Text(text = "Select Unit",color = Red500)
                         }
                     }
-                    items(items.size){index->
-                        CreateOption(i = items[index])
+                    items(items.size){ index->
+                        CreateOption(i = items[index]){
+                            showDialog = false
+                            onUnitPick(it)
+                        }
                     }
                 }
             }
@@ -96,15 +97,8 @@ fun CreateUnitPickerDialog(show:Boolean, items:Array<Int>, listener: UnitPickerL
     ) 
 }
 @Composable
-fun CreateOption(i:Int){
-    Chip(label = {
-            Text(text = UnitType.unitTypeToString(i, true), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 18.sp)
-         },
-        onClick = { unitPickerListener.onUnitPick(i)},
-        colors = ChipDefaults.primaryChipColors(
-            contentColor = MaterialTheme.colors.onSurface,
-            backgroundColor = Color(0xff333333)
-        ),
-        modifier = Modifier.fillMaxWidth()
-    )
+fun CreateOption(i:Int, onUnitPick: (selectedUnit: Int) -> Unit){
+    Card(onClick = { onUnitPick(i) }, modifier = Modifier.fillMaxWidth()) {
+        Text(text = UnitType.unitTypeToString(i, true), modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 18.sp)
+    }
 }
