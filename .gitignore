@@ -1,5 +1,6 @@
 *.iml
 .gradle
+*.abb
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -15,3 +16,5 @@
 local.properties
 /.idea/codeStyles/Project.xml
 /.idea/codeStyles/codeStyleConfig.xml
+/app/release/app-release.apk
+/app/release/output-metadata.json
