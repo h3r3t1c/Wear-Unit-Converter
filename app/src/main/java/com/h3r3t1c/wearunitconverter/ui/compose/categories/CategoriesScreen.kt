@@ -1,4 +1,4 @@
-package com.h3r3t1c.wearunitconverter.ui.compose.home.options
+package com.h3r3t1c.wearunitconverter.ui.compose.categories
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +27,7 @@ import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.NumberInputDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.nav.NavDestination
 
 @Composable
-fun OptionsScreen(navController: NavHostController){
+fun CategoriesScreen(navController: NavHostController){
     val viewModel = viewModel<ConvertOptionsViewModel>()
     val padding = rememberResponsiveColumnPadding(
         first = ColumnItemType.ListHeader,

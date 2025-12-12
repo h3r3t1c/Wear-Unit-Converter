@@ -62,6 +62,7 @@ fun NumberInputDialog(visible: Boolean, initialNumber: String = "0", onDismiss: 
         var text by remember(initialNumber) { mutableStateOf(if(initialNumber.endsWith(".0")) initialNumber.dropLast(2) else initialNumber) }
         val vibrate = LocalHapticFeedback.current
         val scrollState = rememberScrollState()
+        var textSize by remember { mutableStateOf(18f) }
         val updateText: (String) -> Unit = { key ->
             if(key == "ok"){
                 vibrate.performHapticFeedback(HapticFeedbackType.Confirm)
@@ -71,6 +72,7 @@ fun NumberInputDialog(visible: Boolean, initialNumber: String = "0", onDismiss: 
                 text = when (key) {
                     "C" -> {
                         vibrate.performHapticFeedback(HapticFeedbackType.LongPress)
+                        textSize = 18f
                         "0"
                     }
                     "back" -> {
@@ -115,8 +117,6 @@ fun NumberInputDialog(visible: Boolean, initialNumber: String = "0", onDismiss: 
         }
         val isLargeScreen = WearStyleHelper.isLargeScreen()
 
-
-
         ScreenScaffold(
             timeText = { },
             modifier = Modifier.fillMaxSize()
@@ -139,13 +139,17 @@ fun NumberInputDialog(visible: Boolean, initialNumber: String = "0", onDismiss: 
                         BasicText(
                             text = text,
                             modifier = Modifier
-                                .weight(1f).horizontalScroll(scrollState),
+                                .weight(1f) then if(textSize == 12f) Modifier.horizontalScroll(scrollState) else Modifier,
                             style = TextStyle(
                                 color = Color.White,
                                 textAlign = TextAlign.Right,
+                                fontSize = if(textSize == 12f) TextUnit(textSize, TextUnitType.Sp) else TextUnit.Unspecified
                             ),
+                            onTextLayout = {
+                                textSize = it.layoutInput.style.fontSize.value
+                            },
                             maxLines = 1,
-                            autoSize = TextAutoSize.StepBased(TextUnit(12f, TextUnitType.Sp), TextUnit(18f, TextUnitType.Sp))
+                            autoSize = if(textSize > 12) TextAutoSize.StepBased(TextUnit(12f, TextUnitType.Sp), TextUnit(18f, TextUnitType.Sp)) else null
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(

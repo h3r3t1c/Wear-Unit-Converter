@@ -1,4 +1,4 @@
-package com.h3r3t1c.wearunitconverter.ui.compose.home.options
+package com.h3r3t1c.wearunitconverter.ui.compose.categories
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf

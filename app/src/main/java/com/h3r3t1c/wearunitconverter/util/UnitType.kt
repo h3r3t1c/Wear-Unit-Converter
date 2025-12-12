@@ -3,7 +3,6 @@ package com.h3r3t1c.wearunitconverter.util
 import android.icu.text.MeasureFormat
 import android.icu.util.MeasureUnit
 import android.icu.util.ULocale
-import com.h3r3t1c.wearunitconverter.activities.ConverterType_old
 
 object UnitType {
 
@@ -115,15 +114,4 @@ object UnitType {
                 else ->"?"
             }
     }
-    fun getUnitTypeList(type:Int):List<Int>{
-        return when(type){
-            ConverterType_old.TYPE_TEMPERATURE -> TEMPERATURE_UNITS
-            ConverterType_old.TYPE_SPEED -> SPEED_UNITS
-            ConverterType_old.TYPE_TIME -> TIME_UNITS
-            ConverterType_old.TYPE_LENGTH -> LENGTH_UNITS
-            ConverterType_old.TYPE_WEIGHT -> WEIGHT_UNITS
-            else -> TEMPERATURE_UNITS
-        }
-    }
-
 }

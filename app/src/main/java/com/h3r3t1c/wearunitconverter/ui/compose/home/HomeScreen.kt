@@ -1,7 +1,6 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,7 +12,8 @@ import androidx.wear.compose.material3.AnimatedPage
 import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.HorizontalPagerScaffold
 import androidx.wear.compose.material3.PagerScaffoldDefaults
-import com.h3r3t1c.wearunitconverter.ui.compose.home.options.OptionsScreen
+import com.h3r3t1c.wearunitconverter.ui.compose.categories.CategoriesScreen
+import com.h3r3t1c.wearunitconverter.ui.compose.settings.SettingsScreen
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
@@ -40,8 +40,8 @@ fun HomeScreen(navController: NavHostController) {
         ) { page ->
             AnimatedPage(pageIndex = page, pagerState = pagerState) {
                 when (page) {
-                    0 -> OptionsScreen(navController)
-                    1 -> Box(modifier = Modifier.fillMaxSize().background(color = Color.Black))
+                    0 -> CategoriesScreen(navController)
+                    1 -> SettingsScreen(navController)
                 }
             }
         }
