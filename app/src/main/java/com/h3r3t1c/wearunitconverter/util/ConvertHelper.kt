@@ -1,9 +1,9 @@
 package com.h3r3t1c.wearunitconverter.util
 
 import android.content.Context
+import androidx.compose.runtime.Stable
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.text.DecimalFormat
 import kotlin.math.abs
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
@@ -360,9 +360,11 @@ object ConvertHelper {
             convertTemperature(numIn,unitIn, unitOut)
         }
     }
-    private fun formatNumber(context: Context, d:Double):String{
+    @Stable
+    fun formatNumber(context: Context, d:Double):String{
         val bigDecimal = BigDecimal.valueOf(d)
-        return bigDecimal.setScale(AppPrefs.getMaxSigDigits(context).coerceAtMost(calcDecimalLen(d)), RoundingMode.UP).toEngineeringString()
+        val s = bigDecimal.setScale(AppPrefs.getMaxSigDigits(context).coerceAtMost(calcDecimalLen(d)), RoundingMode.UP).toEngineeringString()
+        return if(s.endsWith(".0")) s.dropLast(2) else s
     }
     private fun calcDecimalLen(d:Double):Int{
         val text = abs(d).toString()

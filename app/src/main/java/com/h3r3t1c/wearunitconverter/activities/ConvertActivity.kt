@@ -1,5 +1,4 @@
-
-package com.h3r3t1c.wearunitconverter.presentation
+package com.h3r3t1c.wearunitconverter.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -7,7 +6,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -33,9 +31,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,7 +41,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -55,11 +49,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.foundation.CurvedLayout
 import androidx.wear.compose.foundation.CurvedModifier
 import androidx.wear.compose.foundation.CurvedTextStyle
@@ -75,7 +66,6 @@ import androidx.wear.compose.foundation.rememberActiveFocusRequester
 
 
 import androidx.wear.compose.material.HorizontalPageIndicator
-import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.PositionIndicator
@@ -85,18 +75,14 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 
 
-import com.h3r3t1c.wearunitconverter.dialogs.CreateUnitPickerDialog
-import com.h3r3t1c.wearunitconverter.ext.topAlpha
-import com.h3r3t1c.wearunitconverter.presentation.composables.AutoSizeText
-import com.h3r3t1c.wearunitconverter.presentation.theme.Blue500
-import com.h3r3t1c.wearunitconverter.presentation.theme.Red500
-import com.h3r3t1c.wearunitconverter.presentation.theme.WearUnitConverterTheme
+import com.h3r3t1c.wearunitconverter.ui.theme.Red500
+import com.h3r3t1c.wearunitconverter.ui.theme.WearUnitConverterTheme
 import com.h3r3t1c.wearunitconverter.util.ConvertHelper
 import com.h3r3t1c.wearunitconverter.util.UnitType
 import com.h3r3t1c.wearunitconverter.viewmodels.ConvertActivityViewModel
 import kotlinx.coroutines.launch
 
-object ConverterType{
+object ConverterType_old{
     const val TYPE_TEMPERATURE = 0
     const val TYPE_SPEED = 1
     const val TYPE_TIME = 2
@@ -105,18 +91,14 @@ object ConverterType{
 }
 
 const val NUMBER_FONT_SIZE = 18
-lateinit var unitsList:Array<Int>
+lateinit var unitsList:List<Int>
 
 class ConvertActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val type = this.intent.getIntExtra("type",0)
         unitsList = UnitType.getUnitTypeList(type)
-        setContent {
-            val viewModel:ConvertActivityViewModel = viewModel(factory = ConvertActivityViewModel.provideFactory(
-                 unitsList[0], unitsList[1], this, unitsList, this))
-            ConvertWearApp(viewModel)
-        }
+
     }
 }
 
@@ -193,7 +175,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel){
                 CurvedLayout(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .alpha(listState.topAlpha)
+                        //.alpha(listState.topAlpha)
                         .padding(top = 4.dp)
                 ) {
                     basicCurvedText(
@@ -213,8 +195,8 @@ fun PageTwo(viewModel: ConvertActivityViewModel){
             else{
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(listState.topAlpha),
+                        .fillMaxWidth(),
+                        //.alpha(listState.topAlpha),
                     contentAlignment = Alignment.Center
                 ){
 
@@ -325,7 +307,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel){
                 Box(modifier = Modifier
                     .fillMaxWidth()
                     .padding(2.dp), contentAlignment = Alignment.Center){
-                    Icon(imageVector = Icons.Default.ArrowDownward, contentDescription = "", tint = Color.White)
+                    //Icon(imageVector = Icons.Default.ArrowDownward, contentDescription = "", tint = Color.White)
                 }
             }
 
@@ -336,12 +318,7 @@ fun PageTwo(viewModel: ConvertActivityViewModel){
         }
 
         if(showPickerDialog) {
-            CreateUnitPickerDialog(unitsList){value ->
-                showPickerDialog = false
-                if (value != -1) {
-                    viewModel.updateTopUnit(context, value)
-                }
-            }
+
         }
         LaunchedEffect(Unit){
             listState.scrollToItem(0)
@@ -460,7 +437,7 @@ fun ConversionEntryTop(viewModel: ConvertActivityViewModel, modifier: Modifier, 
             contentAlignment = Alignment.CenterStart
         ){
 
-            AutoSizeText(
+            /*Text(
                 text = text,
                 color = Color.White,
                 maxLines = 2,
@@ -471,16 +448,11 @@ fun ConversionEntryTop(viewModel: ConvertActivityViewModel, modifier: Modifier, 
                     .padding(start = 12.dp, end = 12.dp)
                     .fillMaxWidth()
                     .wrapContentHeight(),
-            )
+            )*/
         }
     }
     if(showUnitPickerDialog) {
-        CreateUnitPickerDialog(unitsList){value ->
-            showUnitPickerDialog = false
-            if (value != -1) {
-                viewModel.updateTopUnit(context, value)
-            }
-        }
+
     }
 }
 @Composable
@@ -510,7 +482,7 @@ fun ConversionEntryBottom(viewModel: ConvertActivityViewModel, modifier: Modifie
                 },
             contentAlignment = Alignment.CenterStart
         ){
-            AutoSizeText(
+            /*AutoSizeText(
                 text = text,
                 color = Color.White,
                 maxLines = 2,
@@ -521,7 +493,7 @@ fun ConversionEntryBottom(viewModel: ConvertActivityViewModel, modifier: Modifie
                     .padding(start = 12.dp, end = 12.dp)
                     .fillMaxWidth()
                     .wrapContentHeight(),
-            )
+            )*/
         }
 
         Box(
@@ -548,12 +520,7 @@ fun ConversionEntryBottom(viewModel: ConvertActivityViewModel, modifier: Modifie
         }
     }
     if(showUnitPickerDialog) {
-        CreateUnitPickerDialog(unitsList){value ->
-            showUnitPickerDialog = false
-            if (value != -1) {
-                viewModel.updateBottomUnit(context, value)
-            }
-        }
+
     }
 }
 

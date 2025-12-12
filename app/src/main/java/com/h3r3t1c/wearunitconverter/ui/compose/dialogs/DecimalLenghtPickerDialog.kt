@@ -1,14 +1,9 @@
-package com.h3r3t1c.wearunitconverter.dialogs
+package com.h3r3t1c.wearunitconverter.ui.compose.dialogs
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -55,7 +50,7 @@ fun DecimalLengthDialog(startingValue:Int, onDismiss:(selectedVal:Int)->Unit){
                     .background(Color.Black),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(imageVector = Icons.Default.Settings, contentDescription = null, tint = Color.Black, modifier = Modifier.height(32.dp).width(32.dp))
+                //Icon(imageVector = Icons.Default.Settings, contentDescription = null, tint = Color.Black, modifier = Modifier.height(32.dp).width(32.dp))
                 Text(
                     text = "Decimal Length",
                     color = Color.White,

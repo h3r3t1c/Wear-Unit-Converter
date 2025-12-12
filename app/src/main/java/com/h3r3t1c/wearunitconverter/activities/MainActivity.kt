@@ -1,9 +1,7 @@
-
-package com.h3r3t1c.wearunitconverter.presentation
+package com.h3r3t1c.wearunitconverter.activities
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,17 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DeviceThermostat
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Scale
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Speed
-import androidx.compose.material.icons.filled.Straighten
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,8 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,28 +44,23 @@ import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.foundation.rememberActiveFocusRequester
-import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.ListHeader
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.PositionIndicator
-
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
-
 import androidx.wear.remote.interactions.RemoteActivityHelper
 import androidx.wear.widget.ConfirmationOverlay
-import com.h3r3t1c.wearunitconverter.BuildConfig
 import com.h3r3t1c.wearunitconverter.R
-import com.h3r3t1c.wearunitconverter.dialogs.DecimalLengthDialog
 import com.h3r3t1c.wearunitconverter.ext.findActivity
-import com.h3r3t1c.wearunitconverter.presentation.theme.Blue500
-import com.h3r3t1c.wearunitconverter.presentation.theme.Red500
-import com.h3r3t1c.wearunitconverter.presentation.theme.WearUnitConverterTheme
+import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.DecimalLengthDialog
+import com.h3r3t1c.wearunitconverter.ui.compose.nav.Nav
+import com.h3r3t1c.wearunitconverter.ui.compose.nav.NavDestination
+import com.h3r3t1c.wearunitconverter.ui.theme.WearUnitConverterTheme
 import com.h3r3t1c.wearunitconverter.util.AppPrefs
 import kotlinx.coroutines.launch
 
@@ -89,8 +69,9 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContent {
-            WearApp()
-
+            WearUnitConverterTheme {
+                Nav(NavDestination.HOME)
+            }
         }
     }
 }
@@ -162,7 +143,7 @@ fun SettingsPage(){
                 .focusable(),
             state = listState
         ) {
-            item {
+            /*item {
                 ListHeader {
                     Text(text = stringResource(R.string.settings), color = Red500)
                 }
@@ -218,7 +199,7 @@ fun SettingsPage(){
             }
             item{
                 AboutOption(title = stringResource(R.string.version), msg = BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")", ico = Icons.Default.Info, null)
-            }
+            }*/
         }
         if(showDialog){
             DecimalLengthDialog(sigDigits) { selectedVal ->
@@ -240,11 +221,11 @@ fun openURL(url:String, context:Context){
             .setDuration(2000)
             .showOn(context.findActivity())
         val remoteActivityHelper = RemoteActivityHelper(context)
-        remoteActivityHelper.startRemoteActivity(
+        /*remoteActivityHelper.startRemoteActivity(
             Intent(Intent.ACTION_VIEW).setData(
                 Uri.parse(url)
             ).addCategory(Intent.CATEGORY_BROWSABLE), null
-        )
+        )*/
 }
 @OptIn(ExperimentalWearFoundationApi::class)
 @Composable
@@ -270,7 +251,7 @@ fun HomePage(){
                 .focusable(),
             state = listState
         ) {
-            item {
+            /*item {
                 ListHeader {
                     Text(text = stringResource(R.string.unit_conversion), color = Red500)
                 }
@@ -289,7 +270,7 @@ fun HomePage(){
             }
             item{
                 HomeOption(title = stringResource(R.string.time), Icons.Default.Schedule, ConverterType.TYPE_TIME)
-            }
+            }*/
         }
     }
     LaunchedEffect(true){

@@ -3,8 +3,7 @@ package com.h3r3t1c.wearunitconverter.util
 import android.icu.text.MeasureFormat
 import android.icu.util.MeasureUnit
 import android.icu.util.ULocale
-import com.h3r3t1c.wearunitconverter.presentation.ConverterType
-import java.util.Locale
+import com.h3r3t1c.wearunitconverter.activities.ConverterType_old
 
 object UnitType {
 
@@ -44,16 +43,26 @@ object UnitType {
     const val UNIT_TYPE_WEIGHT_STONE_UK = 29
 
 
-    val TEMPERATURE_UNITS = arrayOf( UNIT_TYPE_TEMPERATURE_FAHRENHEIT,UNIT_TYPE_TEMPERATURE_CELSIUS, UNIT_TYPE_TEMPERATURE_KELVIN)
-    val SPEED_UNITS = arrayOf(UNIT_TYPE_SPEED_MILE_PER_HOUR,UNIT_TYPE_SPEED_FOOT_PER_SECOND,UNIT_TYPE_SPEED_METER_PER_SECOND,UNIT_TYPE_SPEED_KM_PER_HOUR,UNIT_TYPE_SPEED_KNOT)
-    val TIME_UNITS = arrayOf(UNIT_TYPE_TIME_MILLS,UNIT_TYPE_TIME_SECOND,UNIT_TYPE_TIME_MINUTE,UNIT_TYPE_TIME_HOUR,UNIT_TYPE_TIME_DAY)
-    val LENGTH_UNITS = arrayOf(UNIT_TYPE_LENGTH_FOOT,UNIT_TYPE_LENGTH_KILOMETER,UNIT_TYPE_LENGTH_METER,UNIT_TYPE_LENGTH_CENTIMETER,UNIT_TYPE_LENGTH_MILLIMETER,
+    val TEMPERATURE_UNITS = listOf( UNIT_TYPE_TEMPERATURE_FAHRENHEIT,UNIT_TYPE_TEMPERATURE_CELSIUS, UNIT_TYPE_TEMPERATURE_KELVIN)
+    val SPEED_UNITS = listOf(UNIT_TYPE_SPEED_MILE_PER_HOUR,UNIT_TYPE_SPEED_FOOT_PER_SECOND,UNIT_TYPE_SPEED_METER_PER_SECOND,UNIT_TYPE_SPEED_KM_PER_HOUR,UNIT_TYPE_SPEED_KNOT)
+    val TIME_UNITS = listOf(UNIT_TYPE_TIME_MILLS,UNIT_TYPE_TIME_SECOND,UNIT_TYPE_TIME_MINUTE,UNIT_TYPE_TIME_HOUR,UNIT_TYPE_TIME_DAY)
+    val LENGTH_UNITS = listOf(UNIT_TYPE_LENGTH_FOOT,UNIT_TYPE_LENGTH_KILOMETER,UNIT_TYPE_LENGTH_METER,UNIT_TYPE_LENGTH_CENTIMETER,UNIT_TYPE_LENGTH_MILLIMETER,
                                     UNIT_TYPE_LENGTH_MILE, UNIT_TYPE_LENGTH_YARD, UNIT_TYPE_LENGTH_INCH)
-    val WEIGHT_UNITS = arrayOf(UNIT_TYPE_WEIGHT_POUND,UNIT_TYPE_WEIGHT_OUNCE,UNIT_TYPE_WEIGHT_TON_METRIC,UNIT_TYPE_WEIGHT_KILOGRAM,UNIT_TYPE_WEIGHT_GRAM,
+    val WEIGHT_UNITS = listOf(UNIT_TYPE_WEIGHT_POUND,UNIT_TYPE_WEIGHT_OUNCE,UNIT_TYPE_WEIGHT_TON_METRIC,UNIT_TYPE_WEIGHT_KILOGRAM,UNIT_TYPE_WEIGHT_GRAM,
                                     UNIT_TYPE_WEIGHT_MILLIGRAM, UNIT_TYPE_WEIGHT_TON_UK, UNIT_TYPE_WEIGHT_TON_US, UNIT_TYPE_WEIGHT_STONE_UK)
 
     private lateinit var unitFormatter:MeasureFormat
     private lateinit var unitFormatterLong : MeasureFormat
+
+    fun getUnitsForConverterType(type: ConverterType): List<Int>{
+        return when(type){
+            ConverterType.TEMPERATURE -> TEMPERATURE_UNITS
+            ConverterType.SPEED -> SPEED_UNITS
+            ConverterType.TIME -> TIME_UNITS
+            ConverterType.LENGTH -> LENGTH_UNITS
+            ConverterType.WEIGHT -> WEIGHT_UNITS
+        }
+    }
 
     /**
      *  Important: MeasureFormat does not work with unit testing...
@@ -67,6 +76,7 @@ object UnitType {
                 ULocale.getDefault(), MeasureFormat.FormatWidth.WIDE
             )
         }
+        unitFormatter.formatMeasures()
         return when(type){
                 UNIT_TYPE_TEMPERATURE_FAHRENHEIT -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.FAHRENHEIT) else unitFormatter.getUnitDisplayName(MeasureUnit.FAHRENHEIT)
                 UNIT_TYPE_TEMPERATURE_CELSIUS -> if(useFull) unitFormatterLong.getUnitDisplayName(MeasureUnit.CELSIUS) else unitFormatter.getUnitDisplayName(MeasureUnit.CELSIUS)
@@ -105,13 +115,13 @@ object UnitType {
                 else ->"?"
             }
     }
-    fun getUnitTypeList(type:Int):Array<Int>{
+    fun getUnitTypeList(type:Int):List<Int>{
         return when(type){
-            ConverterType.TYPE_TEMPERATURE -> TEMPERATURE_UNITS
-            ConverterType.TYPE_SPEED -> SPEED_UNITS
-            ConverterType.TYPE_TIME -> TIME_UNITS
-            ConverterType.TYPE_LENGTH -> LENGTH_UNITS
-            ConverterType.TYPE_WEIGHT -> WEIGHT_UNITS
+            ConverterType_old.TYPE_TEMPERATURE -> TEMPERATURE_UNITS
+            ConverterType_old.TYPE_SPEED -> SPEED_UNITS
+            ConverterType_old.TYPE_TIME -> TIME_UNITS
+            ConverterType_old.TYPE_LENGTH -> LENGTH_UNITS
+            ConverterType_old.TYPE_WEIGHT -> WEIGHT_UNITS
             else -> TEMPERATURE_UNITS
         }
     }

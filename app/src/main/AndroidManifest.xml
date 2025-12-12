@@ -18,13 +18,13 @@
 
 
         <activity
-            android:name=".presentation.NumberEntryActivity"
+            android:name=".activities.NumberEntryActivity"
             android:exported="false"
             android:label="@string/title_activity_presentation._number_entry"
             android:theme="@android:style/Theme.DeviceDefault" />
 
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:icon="@drawable/splash_screen"
@@ -38,7 +38,7 @@
         </activity>
 
         <activity
-            android:name=".presentation.ConvertActivity"
+            android:name=".activities.ConvertActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.DeviceDefault" />
