@@ -41,11 +41,11 @@ fun SingleConvertScreen(viewModel: ConvertViewModel){
             UnitButton(viewModel.topUnitString) {
                 viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_UNIT
             }
-            Value(viewModel.topValue){
+            Value(viewModel.topValue, viewModel.maxSigDigits){
                 viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_VALUE
             }
             Text("=")
-            Value(viewModel.bottomValue){
+            Value(viewModel.bottomValue, viewModel.maxSigDigits){
                 viewModel.dialogState = ConvertDialogState.CHANGE_SECOND_VALUE
             }
             UnitButton(viewModel.bottomUnitString) {
@@ -71,7 +71,7 @@ private fun UnitButton(text: String, onClick: () -> Unit){
     }
 }
 @Composable
-private fun ColumnScope.Value(value: Double, onClick: () -> Unit){
+private fun ColumnScope.Value(value: Double, maxDigits: Int, onClick: () -> Unit){
     val context = LocalContext.current
     Box(
         modifier = Modifier
@@ -83,7 +83,7 @@ private fun ColumnScope.Value(value: Double, onClick: () -> Unit){
         contentAlignment = Alignment.Center
     ){
         BasicText(
-            text = ConvertHelper.formatNumber(context, value),
+            text = ConvertHelper.formatNumber(maxDigits, value),
             maxLines = 1,
             style = TextStyle(
                 color = Color.White,

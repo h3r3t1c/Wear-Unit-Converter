@@ -29,6 +29,7 @@ import com.h3r3t1c.wearunitconverter.R
 import com.h3r3t1c.wearunitconverter.ui.compose.common.ColumnItemType
 import com.h3r3t1c.wearunitconverter.ui.compose.common.FontScaleIndependent
 import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnPadding
+import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.DecimalLengthDialog
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
@@ -70,6 +71,7 @@ fun SettingsScreen(navController: NavHostController){
                 }
             }
         }
+        Dialogs(viewModel)
         FontScaleIndependent {
             val dialogStyle = OpenOnPhoneDialogDefaults.curvedTextStyle
             OpenOnPhoneDialog(
@@ -80,6 +82,13 @@ fun SettingsScreen(navController: NavHostController){
         }
     }
 }
+@Composable
+private fun Dialogs(viewModel: SettingsViewModel){
+    DecimalLengthDialog(viewModel.dialogState == SettingsDialogState.SET_MAX_DECI) {
+        viewModel.dialogState = SettingsDialogState.NONE
+    }
+}
+
 @Composable
 private fun ClickOption(option: SettingsOption.ClickOption){
     Button(

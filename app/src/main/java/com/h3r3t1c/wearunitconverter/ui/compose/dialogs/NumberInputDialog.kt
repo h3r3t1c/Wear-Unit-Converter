@@ -96,7 +96,7 @@ fun NumberInputDialog(visible: Boolean, initialNumber: String = "0", onDismiss: 
                     else -> {
                         vibrate.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                         if (text.startsWith("0.") || text.startsWith("-0.")) text + key
-                        else if (text.equals("0"))
+                        else if (text == "0")
                             key
                         else text + key
                     }

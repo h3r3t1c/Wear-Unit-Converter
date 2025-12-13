@@ -76,7 +76,7 @@ private fun Dialogs(viewModel: ConvertViewModel){
 
     NumberInputDialog(
         viewModel.dialogState == ConvertDialogState.CHANGE_FIRST_VALUE,
-        ConvertHelper.formatNumber(context, viewModel.topValue),
+        ConvertHelper.formatNumber(viewModel.maxSigDigits, viewModel.topValue),
         {viewModel.dialogState = ConvertDialogState.NONE}
     ){
         viewModel.updateFirstValue(it.toDouble())
@@ -84,7 +84,7 @@ private fun Dialogs(viewModel: ConvertViewModel){
 
     NumberInputDialog(
         viewModel.dialogState == ConvertDialogState.CHANGE_SECOND_VALUE,
-        ConvertHelper.formatNumber(context, viewModel.bottomValue),
+        ConvertHelper.formatNumber(viewModel.maxSigDigits, viewModel.bottomValue),
         {viewModel.dialogState = ConvertDialogState.NONE}
     ){
         viewModel.updateSecondValue(it.toDouble())

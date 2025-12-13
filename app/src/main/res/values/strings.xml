@@ -18,4 +18,8 @@
     <string name="more_apps">More Apps</string>
     <string name="cannot_open">Cannot open</string>
     <string name="max_decimal_places">Max Decimal Places</string>
+    <string name="area">Area</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="favorites">Favorites</string>
 </resources>

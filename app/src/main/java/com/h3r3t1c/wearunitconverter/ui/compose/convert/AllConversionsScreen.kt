@@ -1,5 +1,6 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.convert
 
+import android.icu.util.MeasureUnit
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -39,7 +40,7 @@ import androidx.wear.compose.material3.Text
 import com.h3r3t1c.wearunitconverter.ui.compose.common.ColumnItemType
 import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnPadding
 import com.h3r3t1c.wearunitconverter.util.ConvertHelper
-import com.h3r3t1c.wearunitconverter.util.UnitType
+import com.h3r3t1c.wearunitconverter.util.UnitHelper
 
 @Composable
 fun AllConversionsScreen(viewModel: ConvertViewModel){
@@ -51,9 +52,7 @@ fun AllConversionsScreen(viewModel: ConvertViewModel){
     val listState = rememberScalingLazyListState(
         0
     )
-    val units = remember(viewModel.type, viewModel.firstUnit) {
-        UnitType.getUnitsForConverterType(viewModel.type).filter { it != viewModel.firstUnit }
-    }
+    val units = remember(viewModel.firstUnit) { viewModel.type.units.filter { it != viewModel.firstUnit } }
     ScreenScaffold(
         scrollState = listState,
         contentPadding = padding
@@ -67,19 +66,19 @@ fun AllConversionsScreen(viewModel: ConvertViewModel){
                 .background(Color.Black)
         ) {
             item{
-                SplitButton(ConvertHelper.formatNumber(context, viewModel.topValue), viewModel.firstUnit, { viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_VALUE }){
+                SplitButton(ConvertHelper.formatNumber(viewModel.maxSigDigits, viewModel.topValue), viewModel.firstUnit, { viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_VALUE }){
                     viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_UNIT
                 }
             }
             items(units.size){
                 val unit = units[it]
-                Conversion(ConvertHelper.convertUnits(context, viewModel.topValue, viewModel.firstUnit, unit), unit)
+                Conversion(ConvertHelper.convertUnits(viewModel.maxSigDigits, viewModel.topValue, viewModel.firstUnit, unit), unit)
             }
         }
     }
 }
 @Composable
-private fun SplitButton(text: String, unit: Int, onPrimaryClick: () -> Unit, onSecondaryClick: () -> Unit){
+private fun SplitButton(text: String, unit: MeasureUnit, onPrimaryClick: () -> Unit, onSecondaryClick: () -> Unit){
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier =
@@ -123,13 +122,13 @@ private fun SplitButton(text: String, unit: Int, onPrimaryClick: () -> Unit, onS
                     .wrapContentHeight(align = Alignment.CenterVertically)
                     .padding(horizontal = 2.dp),
         ) {
-            Text(text = UnitType.unitTypeToString(unit, false), maxLines = 1, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimary)
+            Text(text = UnitHelper.unitToString(unit), maxLines = 1, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimary)
         }
     }
 }
 
 @Composable
-private fun Conversion(text: String, unit: Int){
+private fun Conversion(text: String, unit: MeasureUnit){
     val context = LocalContext.current
     var showAlt by remember { mutableStateOf(false) }
     Button(
@@ -140,7 +139,7 @@ private fun Conversion(text: String, unit: Int){
             Text(text = text, maxLines = 2)
         },
         secondaryLabel = {
-            Text(text = UnitType.unitTypeToString(unit, showAlt))
+            Text(text = UnitHelper.unitToString(unit, showAlt))
         },
         modifier = Modifier.fillMaxSize(),
         colors = ButtonDefaults.filledTonalButtonColors()

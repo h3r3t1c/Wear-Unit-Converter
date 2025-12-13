@@ -1,10 +1,10 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.dialogs
 
+import android.icu.util.MeasureUnit
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -20,19 +20,17 @@ import androidx.wear.compose.material3.Text
 import com.h3r3t1c.wearunitconverter.ui.compose.common.ColumnItemType
 import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnPadding
 import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.UnitType
+import com.h3r3t1c.wearunitconverter.util.UnitHelper
 
 
 @OptIn(ExperimentalWearFoundationApi::class)
 @Composable
-fun UnitPickerDialog(visible: Boolean, currentUnit: Int, type: ConverterType, onDismiss: () -> Unit, onUnitPick: (Int) -> Unit){
+fun UnitPickerDialog(visible: Boolean, currentUnit: MeasureUnit, type: ConverterType, onDismiss: () -> Unit, onUnitPick: (MeasureUnit) -> Unit){
     Dialog(
         visible = visible,
         onDismissRequest = onDismiss
     ) {
-        val units = remember {
-            UnitType.getUnitsForConverterType(type)
-        }
+
         val context = LocalContext.current
         val padding = rememberResponsiveColumnPadding(
             first = ColumnItemType.ListHeader,
@@ -59,10 +57,10 @@ fun UnitPickerDialog(visible: Boolean, currentUnit: Int, type: ConverterType, on
                         Text(ConverterType.toDisplayName(context, type), textAlign = TextAlign.Center)
                     }
                 }
-                items(units.size) {
-                    val unit = units[it]
+                items(type.units.size) {
+                    val unit = type.units[it]
                     Option(unit, unit == currentUnit) {
-                        onUnitPick(units[it])
+                        onUnitPick(unit)
                     }
                 }
             }
@@ -70,15 +68,15 @@ fun UnitPickerDialog(visible: Boolean, currentUnit: Int, type: ConverterType, on
     }
 }
 @Composable
-fun Option(unit:Int, selected: Boolean, onClick: () -> Unit){
+fun Option(unit: MeasureUnit, selected: Boolean, onClick: () -> Unit){
     RadioButton(
         selected = selected,
         onSelect = onClick,
         secondaryLabel = {
-            Text(UnitType.unitTypeToString(unit, false))
+            Text(UnitHelper.unitToString(unit))
         },
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(UnitType.unitTypeToString(unit, true))
+        Text(UnitHelper.unitToString(unit, true))
     }
 }

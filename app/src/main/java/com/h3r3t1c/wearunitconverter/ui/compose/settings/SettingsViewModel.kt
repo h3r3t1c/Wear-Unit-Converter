@@ -22,13 +22,14 @@ import java.util.concurrent.Executors
 
 class SettingsViewModel(context: Context): ViewModel() {
 
+    var dialogState by mutableStateOf(SettingsDialogState.NONE)
     val options = mutableStateListOf<SettingsOption>()
     var showContinueOnPhoneDialog by mutableStateOf(false)
 
     init {
         options.add(SettingsOption.Header(R.string.settings))
         options.add(SettingsOption.ClickOption(R.string.max_decimal_places, R.drawable.ic_decimal_places){
-
+            dialogState = SettingsDialogState.SET_MAX_DECI
         })
         options.add(SettingsOption.Header(R.string.support))
         options.add(SettingsOption.ClickOption(R.string.support_email, R.drawable.ic_email){
@@ -80,4 +81,8 @@ class SettingsViewModel(context: Context): ViewModel() {
             return factory
         }
     }
+}
+enum class SettingsDialogState{
+    NONE,
+    SET_MAX_DECI,
 }

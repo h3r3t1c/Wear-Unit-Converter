@@ -1,11 +1,11 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.convert
 
+import android.icu.util.MeasureUnit
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
@@ -32,7 +33,7 @@ import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.NumberInputDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.UnitPickerDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.nav.NavDestination
 import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.UnitType
+import com.h3r3t1c.wearunitconverter.util.UnitHelper
 
 @Composable
 fun ConvertToOptionsScreen(navController: NavHostController, type: ConverterType, number: String){
@@ -45,10 +46,10 @@ fun ConvertToOptionsScreen(navController: NavHostController, type: ConverterType
         0
     )
     var firstUnit by remember {
-        mutableIntStateOf(UnitType.getUnitsForConverterType(type)[0])
+        mutableStateOf(type.units[0])
     }
     var secondUnit by remember {
-        mutableIntStateOf(UnitType.getUnitsForConverterType(type)[1])
+        mutableStateOf(type.units[1])
     }
     var currentNumber by remember(number) {
         mutableStateOf(number)
@@ -89,14 +90,14 @@ fun ConvertToOptionsScreen(navController: NavHostController, type: ConverterType
                 }
             }
             item{
-                UnitButton("From", firstUnit, type) {
+                UnitButton(stringResource(R.string.from), firstUnit, type) {
                     if(secondUnit == it)
                         secondUnit = firstUnit
                     firstUnit = it
                 }
             }
             item{
-                UnitButton("To", secondUnit, type) {
+                UnitButton(stringResource(R.string.to), secondUnit, type) {
                     if(firstUnit == it)
                         firstUnit = secondUnit
                     secondUnit = it
@@ -126,7 +127,7 @@ private fun NumberButton(number: String, onChange: (String) -> Unit){
     }
 }
 @Composable
-private fun UnitButton(title: String, unit: Int, type: ConverterType, onChange: (Int) -> Unit){
+private fun UnitButton(title: String, unit: MeasureUnit, type: ConverterType, onChange: (MeasureUnit) -> Unit){
     var showDialog by remember {
         mutableStateOf(false)
     }
@@ -138,7 +139,7 @@ private fun UnitButton(title: String, unit: Int, type: ConverterType, onChange: 
             Text(text = title)
         },
         secondaryLabel = {
-            Text(text = UnitType.unitTypeToString(unit, true), maxLines = 3)
+            Text(text = UnitHelper.unitToString(unit, true), maxLines = 3)
         },
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.filledTonalButtonColors()

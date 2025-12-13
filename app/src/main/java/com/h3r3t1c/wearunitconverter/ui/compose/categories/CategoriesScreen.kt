@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,7 +29,8 @@ import com.h3r3t1c.wearunitconverter.ui.compose.nav.NavDestination
 
 @Composable
 fun CategoriesScreen(navController: NavHostController){
-    val viewModel = viewModel<ConvertOptionsViewModel>()
+    val context = LocalContext.current
+    val viewModel = viewModel<ConvertOptionsViewModel>(factory = ConvertOptionsViewModel.getFactory(context))
     val padding = rememberResponsiveColumnPadding(
         first = ColumnItemType.ListHeader,
         last = ColumnItemType.Button
@@ -54,8 +56,7 @@ fun CategoriesScreen(navController: NavHostController){
                 }
             }
             items(viewModel.options, key = {it.type.name}){
-                ListOption(it){
-                    //navController.navigate(NavDestination.getConvertPath(it.type))
+                ListOption(it.title, it.iconResource){
                     viewModel.selectedOption = it.type
                 }
             }
@@ -74,16 +75,16 @@ fun Dialogs(viewModel: ConvertOptionsViewModel, navController: NavHostController
     }
 }
 @Composable
-private fun ListOption(option: Option, onClick: () -> Unit){
+private fun ListOption(title: String, icon: Int, onClick: () -> Unit){
     Button(
         onClick = onClick,
         label = {
-            Text(text = stringResource(option.titleResource))
+            Text(title)
         },
         icon = {
             Icon(
-                imageVector = ImageVector.vectorResource(option.iconResource),
-                contentDescription = stringResource(option.titleResource)
+                imageVector = ImageVector.vectorResource(icon),
+                contentDescription = title
             )
         },
         modifier = Modifier.fillMaxWidth(),

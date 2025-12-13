@@ -1,4 +1,6 @@
-* Changed name to Unit Converter
-* Improved launcher icon
-* Added splash screen
-* Fixed font scaling issues
+• Updated UI to Material 3
+• Support for wear 6.0
+• App translations
+• Improved number input
+• Added Area conversions
+• New app icon
