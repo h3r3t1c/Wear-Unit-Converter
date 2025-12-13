@@ -1,6 +1,5 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.convert
 
-import android.icu.util.MeasureUnit
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,7 +32,7 @@ import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.NumberInputDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.UnitPickerDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.nav.NavDestination
 import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.UnitHelper
+import com.h3r3t1c.wearunitconverter.util.TypeUnit
 
 @Composable
 fun ConvertToOptionsScreen(navController: NavHostController, type: ConverterType, number: String){
@@ -127,7 +126,7 @@ private fun NumberButton(number: String, onChange: (String) -> Unit){
     }
 }
 @Composable
-private fun UnitButton(title: String, unit: MeasureUnit, type: ConverterType, onChange: (MeasureUnit) -> Unit){
+private fun UnitButton(title: String, unit: TypeUnit, type: ConverterType, onChange: (TypeUnit) -> Unit){
     var showDialog by remember {
         mutableStateOf(false)
     }
@@ -139,7 +138,7 @@ private fun UnitButton(title: String, unit: MeasureUnit, type: ConverterType, on
             Text(text = title)
         },
         secondaryLabel = {
-            Text(text = UnitHelper.unitToString(unit, true), maxLines = 3)
+            Text(text = TypeUnit.unitToString(unit, true), maxLines = 3)
         },
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.filledTonalButtonColors()

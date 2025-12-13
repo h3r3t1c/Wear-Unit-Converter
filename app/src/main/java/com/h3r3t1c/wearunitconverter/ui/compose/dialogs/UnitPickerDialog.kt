@@ -1,6 +1,5 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.dialogs
 
-import android.icu.util.MeasureUnit
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,12 +19,12 @@ import androidx.wear.compose.material3.Text
 import com.h3r3t1c.wearunitconverter.ui.compose.common.ColumnItemType
 import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnPadding
 import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.UnitHelper
+import com.h3r3t1c.wearunitconverter.util.TypeUnit
 
 
 @OptIn(ExperimentalWearFoundationApi::class)
 @Composable
-fun UnitPickerDialog(visible: Boolean, currentUnit: MeasureUnit, type: ConverterType, onDismiss: () -> Unit, onUnitPick: (MeasureUnit) -> Unit){
+fun UnitPickerDialog(visible: Boolean, currentUnit: TypeUnit, type: ConverterType, onDismiss: () -> Unit, onUnitPick: (TypeUnit) -> Unit){
     Dialog(
         visible = visible,
         onDismissRequest = onDismiss
@@ -68,15 +67,15 @@ fun UnitPickerDialog(visible: Boolean, currentUnit: MeasureUnit, type: Converter
     }
 }
 @Composable
-fun Option(unit: MeasureUnit, selected: Boolean, onClick: () -> Unit){
+fun Option(unit: TypeUnit, selected: Boolean, onClick: () -> Unit){
     RadioButton(
         selected = selected,
         onSelect = onClick,
         secondaryLabel = {
-            Text(UnitHelper.unitToString(unit))
+            Text(TypeUnit.unitToString(unit))
         },
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(UnitHelper.unitToString(unit, true))
+        Text(TypeUnit.unitToString(unit, true))
     }
 }

@@ -19,7 +19,7 @@ import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.UnitPickerDialog
 import com.h3r3t1c.wearunitconverter.util.ConvertHelper
 
 @Composable
-fun ConvertMainScreen(navController: NavHostController, type: String, number: String, firstUnit: Int, secondUnit: Int){
+fun ConvertMainScreen(navController: NavHostController, type: String, number: String, firstUnit: String, secondUnit: String){
     val context = LocalContext.current
     val viewModel = viewModel<ConvertViewModel>(factory = ConvertViewModel.getFactory(context, type, number, firstUnit, secondUnit), key = type)
     val pagerState = rememberPagerState(

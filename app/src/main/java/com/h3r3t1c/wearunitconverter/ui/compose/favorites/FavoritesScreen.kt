@@ -35,14 +35,14 @@ import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.ConfirmDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.NumberInputDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.nav.NavDestination
 import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.UnitHelper
+import com.h3r3t1c.wearunitconverter.util.TypeUnit
 
 @Composable
 fun FavoritesScreen(navController: NavHostController) {
     val context = LocalContext.current
     val viewModel = viewModel<FavoritesViewModel>(factory = FavoritesViewModel.getFactory(context))
     val padding = rememberResponsiveColumnPadding(
-        first = ColumnItemType.Button,
+        first = ColumnItemType.IconButton,
         last = ColumnItemType.Button
     )
     val listState = rememberScalingLazyListState(
@@ -105,7 +105,7 @@ private fun Dialogs(viewModel: FavoritesViewModel, navController: NavHostControl
     AddFavoriteDialog(viewModel.showAddFavoriteDialog, onDismiss = { viewModel.showAddFavoriteDialog = false },) {
         viewModel.addFavorite(context, it)
     }
-    ConfirmDialog(viewModel.deleteDialog != null, title = "Delete Favorite", text = "${viewModel.deleteDialog?.let { f ->  "${UnitHelper.unitToString(f.from)} → ${UnitHelper.unitToString(f.to)}\n"} ?: ""}Are you sure you want to delete this favorite?", onDismiss = { viewModel.deleteDialog = null }){
+    ConfirmDialog(viewModel.deleteDialog != null, title = "Delete Favorite", text = "${viewModel.deleteDialog?.let { f ->  "${TypeUnit.unitToString(f.from)} → ${TypeUnit.unitToString(f.to)}\n"} ?: ""}Are you sure you want to delete this favorite?", onDismiss = { viewModel.deleteDialog = null }){
         viewModel.deleteFavorite(context, viewModel.deleteDialog!!)
     }
     NumberInputDialog(
@@ -141,7 +141,7 @@ private fun Favorite(f: FavoriteConversion, onDelete: () -> Unit, onClick: () ->
         onClick = onClick,
         onLongClick = onDelete,
         label = {
-            Text(text = "${UnitHelper.unitToString(f.from)} → ${UnitHelper.unitToString(f.to)}", style = MaterialTheme.typography.titleMedium)
+            Text(text = "${TypeUnit.unitToString(f.from)} → ${TypeUnit.unitToString(f.to)}", style = MaterialTheme.typography.titleMedium)
         },
         icon = {
             Icon(

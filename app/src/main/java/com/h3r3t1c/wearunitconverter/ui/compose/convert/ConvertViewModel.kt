@@ -1,7 +1,6 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.convert
 
 import android.content.Context
-import android.icu.util.MeasureUnit
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -13,9 +12,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.h3r3t1c.wearunitconverter.util.AppPrefs
 import com.h3r3t1c.wearunitconverter.util.ConvertHelper
 import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.UnitHelper
+import com.h3r3t1c.wearunitconverter.util.TypeUnit
 
-class ConvertViewModel(context: Context, val type: ConverterType, number: String, mFirstUnit: MeasureUnit, var secondUnit: MeasureUnit): ViewModel() {
+class ConvertViewModel(context: Context, val type: ConverterType, number: String, mFirstUnit: TypeUnit, var secondUnit: TypeUnit): ViewModel() {
 
     var dialogState by mutableStateOf(ConvertDialogState.NONE)
     var topValue by mutableDoubleStateOf(number.toDouble())
@@ -26,39 +25,39 @@ class ConvertViewModel(context: Context, val type: ConverterType, number: String
     val maxSigDigits = AppPrefs.getMaxSigDigits(context)
 
     init {
-        bottomUnitString = UnitHelper.unitToString(secondUnit)
+        bottomUnitString = TypeUnit.unitToString(secondUnit)
         updateFirstUnit(firstUnit)
     }
 
-    fun updateFirstUnit(unit: MeasureUnit) {
+    fun updateFirstUnit(unit: TypeUnit) {
         dialogState = ConvertDialogState.NONE
         if(secondUnit == unit) {
             secondUnit = firstUnit
             firstUnit = unit
-            bottomUnitString = UnitHelper.unitToString(secondUnit)
-            topUnitString = UnitHelper.unitToString(firstUnit)
+            bottomUnitString = TypeUnit.unitToString(secondUnit)
+            topUnitString = TypeUnit.unitToString(firstUnit)
             val tmp = bottomValue
             bottomValue = topValue
             topValue = tmp
         }else {
             firstUnit = unit
-            topUnitString = UnitHelper.unitToString(unit)
+            topUnitString = TypeUnit.unitToString(unit)
             bottomValue = ConvertHelper.convertUnitsRaw(topValue, firstUnit, secondUnit)
         }
     }
-    fun updateSecondUnit(unit: MeasureUnit){
+    fun updateSecondUnit(unit: TypeUnit){
         dialogState = ConvertDialogState.NONE
         if(firstUnit == unit) {
             firstUnit = secondUnit
             secondUnit = unit
-            bottomUnitString = UnitHelper.unitToString(secondUnit)
-            topUnitString = UnitHelper.unitToString(firstUnit)
+            bottomUnitString = TypeUnit.unitToString(secondUnit)
+            topUnitString = TypeUnit.unitToString(firstUnit)
             val tmp = topValue
             topValue = bottomValue
             bottomValue = tmp
         }else {
             secondUnit = unit
-            bottomUnitString = UnitHelper.unitToString(unit)
+            bottomUnitString = TypeUnit.unitToString(unit)
             topValue = ConvertHelper.convertUnitsRaw(bottomValue, secondUnit, firstUnit)
         }
     }
@@ -73,11 +72,11 @@ class ConvertViewModel(context: Context, val type: ConverterType, number: String
         topValue = ConvertHelper.convertUnitsRaw(bottomValue, secondUnit, firstUnit)
     }
     companion object{
-        fun getFactory(context: Context, type: String, number: String, firstUnit: Int, secondUnit: Int): ViewModelProvider.Factory{
+        fun getFactory(context: Context, type: String, number: String, firstUnit: String, secondUnit: String): ViewModelProvider.Factory{
             val factory : ViewModelProvider.Factory = viewModelFactory {
                 initializer {
                     val type = ConverterType.valueOf(type)
-                    ConvertViewModel(context, type, number, type.units[firstUnit], type.units[secondUnit])
+                    ConvertViewModel(context, type, number, TypeUnit.valueOf(firstUnit), TypeUnit.valueOf(secondUnit))
                 }
             }
             return factory

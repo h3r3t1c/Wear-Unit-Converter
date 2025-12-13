@@ -1,69 +1,80 @@
 package com.h3r3t1c.wearunitconverter.util
 
 import android.content.Context
-import android.icu.util.MeasureUnit
 import androidx.compose.runtime.Stable
 import com.h3r3t1c.wearunitconverter.R
 
-enum class ConverterType(val units: List<MeasureUnit>) {
+enum class ConverterType(val units: List<TypeUnit>) {
     TEMPERATURE(
         listOf(
-            MeasureUnit.FAHRENHEIT,
-            MeasureUnit.CELSIUS,
-            MeasureUnit.KELVIN
+            TypeUnit.FAHRENHEIT,
+            TypeUnit.CELSIUS,
+            TypeUnit.KELVIN
         )
     ),
     SPEED(
         listOf(
-            MeasureUnit.MILE_PER_HOUR,
-            MeasureUnit.METER_PER_SECOND,
-            MeasureUnit.KILOMETER_PER_HOUR,
-            MeasureUnit.KNOT
+            TypeUnit.MILE_PER_HOUR,
+            TypeUnit.METER_PER_SECOND,
+            TypeUnit.KILOMETER_PER_HOUR,
+            TypeUnit.KNOT
         )
     ),
     TIME(
         listOf(
-            MeasureUnit.DAY,
-            MeasureUnit.HOUR,
-            MeasureUnit.MINUTE,
-            MeasureUnit.SECOND,
-            MeasureUnit.MILLISECOND,
+            TypeUnit.DAY,
+            TypeUnit.HOUR,
+            TypeUnit.MINUTE,
+            TypeUnit.SECOND,
+            TypeUnit.MILLISECOND,
         )
     ),
     LENGTH(
         listOf(
-            MeasureUnit.FOOT,
-            MeasureUnit.KILOMETER,
-            MeasureUnit.METER,
-            MeasureUnit.CENTIMETER,
-            MeasureUnit.MILLIMETER,
-            MeasureUnit.MILE,
-            MeasureUnit.INCH,
-            MeasureUnit.YARD
+            TypeUnit.FOOT,
+            TypeUnit.KILOMETER,
+            TypeUnit.METER,
+            TypeUnit.CENTIMETER,
+            TypeUnit.MILLIMETER,
+            TypeUnit.MILE,
+            TypeUnit.INCH,
+            TypeUnit.YARD
         )
     ),
     WEIGHT(
         listOf(
-            MeasureUnit.POUND,
-            MeasureUnit.METRIC_TON,
+            TypeUnit.POUND,
+            TypeUnit.METRIC_TON,
             /*MeasureUnit.TON,*/
-            MeasureUnit.KILOGRAM,
-            MeasureUnit.MILLIGRAM,
-            MeasureUnit.GRAM,
-            MeasureUnit.OUNCE,
-            MeasureUnit.STONE
+            TypeUnit.KILOGRAM,
+            TypeUnit.MILLIGRAM,
+            TypeUnit.GRAM,
+            TypeUnit.OUNCE,
+            TypeUnit.STONE
         )
     ),
     AREA(
         listOf(
-            MeasureUnit.ACRE,
-            MeasureUnit.HECTARE,
-            MeasureUnit.SQUARE_METER,
-            MeasureUnit.SQUARE_KILOMETER,
-            MeasureUnit.SQUARE_FOOT,
-            MeasureUnit.SQUARE_INCH,
-            MeasureUnit.SQUARE_YARD,
-            MeasureUnit.SQUARE_MILE
+            TypeUnit.ACRE,
+            TypeUnit.HECTARE,
+            TypeUnit.SQUARE_METER,
+            TypeUnit.SQUARE_KILOMETER,
+            TypeUnit.SQUARE_FOOT,
+            TypeUnit.SQUARE_INCH,
+            TypeUnit.SQUARE_YARD,
+            TypeUnit.SQUARE_MILE
+        )
+    ),
+    PRESSURE(
+        mutableListOf(
+            TypeUnit.BAR,
+            TypeUnit.MILLIBAR,
+            TypeUnit.PASCAL,
+            TypeUnit.KILOPASCAL,
+            TypeUnit.INCH_OF_MERCURY,
+            TypeUnit.MILLIMETER_OF_MERCURY,
+            TypeUnit.POUND_PER_SQUARE_INCH,
+            TypeUnit.ATMOSPHERE
         )
     );
 
@@ -80,6 +91,7 @@ enum class ConverterType(val units: List<MeasureUnit>) {
                 LENGTH -> R.string.length
                 WEIGHT -> R.string.weight
                 AREA -> R.string.area
+                PRESSURE -> R.string.pressure
             }
         }
         @Stable
@@ -91,6 +103,7 @@ enum class ConverterType(val units: List<MeasureUnit>) {
                 LENGTH -> R.drawable.ic_length
                 WEIGHT -> R.drawable.ic_weight
                 AREA -> R.drawable.ic_area
+                PRESSURE -> R.drawable.ic_pressure
             }
         }
     }

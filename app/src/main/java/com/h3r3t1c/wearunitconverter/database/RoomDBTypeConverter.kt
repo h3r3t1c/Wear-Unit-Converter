@@ -1,8 +1,8 @@
 package com.h3r3t1c.wearunitconverter.database
 
-import android.icu.util.MeasureUnit
 import androidx.room.TypeConverter
 import com.h3r3t1c.wearunitconverter.util.ConverterType
+import com.h3r3t1c.wearunitconverter.util.TypeUnit
 
 open class RoomDBTypeConverter {
 
@@ -29,17 +29,15 @@ open class RoomDBTypeConverter {
     }
 
     @TypeConverter
-    fun measureUnitToString(unit: MeasureUnit): String {
-        return unit.toString()
+    fun typeUnitToString(type: TypeUnit): String {
+        return type.name
     }
 
     @TypeConverter
-    fun stringToMeasureUnit(value: String): MeasureUnit {
-        ConverterType.entries.forEach {
-            it.units.forEach { unit ->
-                if(unit.toString() == value) return unit
-            }
+    fun stringToTypeUnit(value: String): TypeUnit {
+        return try{ TypeUnit.valueOf(value)} catch (_: Exception){
+            TypeUnit.CELSIUS
         }
-        return MeasureUnit.ACRE
     }
+
 }

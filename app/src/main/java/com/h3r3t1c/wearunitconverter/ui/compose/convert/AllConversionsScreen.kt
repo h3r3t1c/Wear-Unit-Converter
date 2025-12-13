@@ -1,6 +1,5 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.convert
 
-import android.icu.util.MeasureUnit
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -40,7 +39,7 @@ import androidx.wear.compose.material3.Text
 import com.h3r3t1c.wearunitconverter.ui.compose.common.ColumnItemType
 import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnPadding
 import com.h3r3t1c.wearunitconverter.util.ConvertHelper
-import com.h3r3t1c.wearunitconverter.util.UnitHelper
+import com.h3r3t1c.wearunitconverter.util.TypeUnit
 
 @Composable
 fun AllConversionsScreen(viewModel: ConvertViewModel){
@@ -78,7 +77,7 @@ fun AllConversionsScreen(viewModel: ConvertViewModel){
     }
 }
 @Composable
-private fun SplitButton(text: String, unit: MeasureUnit, onPrimaryClick: () -> Unit, onSecondaryClick: () -> Unit){
+private fun SplitButton(text: String, unit: TypeUnit, onPrimaryClick: () -> Unit, onSecondaryClick: () -> Unit){
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier =
@@ -122,24 +121,24 @@ private fun SplitButton(text: String, unit: MeasureUnit, onPrimaryClick: () -> U
                     .wrapContentHeight(align = Alignment.CenterVertically)
                     .padding(horizontal = 2.dp),
         ) {
-            Text(text = UnitHelper.unitToString(unit), maxLines = 1, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimary)
+            Text(text = TypeUnit.unitToString(unit), maxLines = 1, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimary)
         }
     }
 }
 
 @Composable
-private fun Conversion(text: String, unit: MeasureUnit){
-    val context = LocalContext.current
+private fun Conversion(text: String, unit: TypeUnit){
     var showAlt by remember { mutableStateOf(false) }
     Button(
         onClick = {
             showAlt = !showAlt
         },
         label = {
-            Text(text = text, maxLines = 2)
+            Text(text = text+" ${TypeUnit.unitToString(unit, false)}", maxLines = 2)
         },
         secondaryLabel = {
-            Text(text = UnitHelper.unitToString(unit, showAlt))
+            if(showAlt)
+            Text(text = TypeUnit.unitToString(unit, true))
         },
         modifier = Modifier.fillMaxSize(),
         colors = ButtonDefaults.filledTonalButtonColors()

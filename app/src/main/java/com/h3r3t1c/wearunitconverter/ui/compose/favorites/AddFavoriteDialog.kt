@@ -1,6 +1,5 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.favorites
 
-import android.icu.util.MeasureUnit
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +30,7 @@ import com.h3r3t1c.wearunitconverter.ui.compose.common.ColumnItemType
 import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnPadding
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.UnitPickerDialog
 import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.UnitHelper
+import com.h3r3t1c.wearunitconverter.util.TypeUnit
 
 @Composable
 fun AddFavoriteDialog(visible: Boolean, onDismiss: () -> Unit, onAdd: (FavoriteConversion) -> Unit){
@@ -123,7 +122,7 @@ private fun Type(type: ConverterType, onChange: (ConverterType) -> Unit){
     }
 }
 @Composable
-private fun Unit(title: String, unit: MeasureUnit, type: ConverterType, onChange: (MeasureUnit) -> Unit){
+private fun Unit(title: String, unit: TypeUnit, type: ConverterType, onChange: (TypeUnit) -> Unit){
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
     Button(
@@ -132,7 +131,7 @@ private fun Unit(title: String, unit: MeasureUnit, type: ConverterType, onChange
             Text(title, style = MaterialTheme.typography.titleMedium)
         },
         secondaryLabel = {
-            Text(text = UnitHelper.unitToString(unit, true))
+            Text(text = TypeUnit.unitToString(unit, true))
         },
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.filledTonalButtonColors()

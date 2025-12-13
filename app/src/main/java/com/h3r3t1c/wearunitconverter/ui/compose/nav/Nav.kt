@@ -29,8 +29,8 @@ fun Nav(destination: String) {
             composable(NavDestination.CONVERT_PATH) {
                 val type = it.arguments?.getString("type")
                 val number = it.arguments?.getString("inputNumber")
-                val firstUnit = it.arguments?.getString("from")!!.toInt()
-                val secondUnit = it.arguments?.getString("to")!!.toInt()
+                val firstUnit = it.arguments?.getString("from")!!
+                val secondUnit = it.arguments?.getString("to")!!
                 ConvertMainScreen(navController, type!!, number!!, firstUnit, secondUnit)
             }
             composable(NavDestination.CONVERT_TO_OPTIONS_PATH) {
