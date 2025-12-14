@@ -16,7 +16,6 @@ import androidx.wear.compose.material3.HorizontalPagerScaffold
 import androidx.wear.compose.material3.PagerScaffoldDefaults
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.NumberInputDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.UnitPickerDialog
-import com.h3r3t1c.wearunitconverter.util.ConvertHelper
 
 @Composable
 fun ConvertMainScreen(navController: NavHostController, type: String, number: String, firstUnit: String, secondUnit: String){
@@ -76,17 +75,17 @@ private fun Dialogs(viewModel: ConvertViewModel){
 
     NumberInputDialog(
         viewModel.dialogState == ConvertDialogState.CHANGE_FIRST_VALUE,
-        ConvertHelper.formatNumber(viewModel.maxSigDigits, viewModel.topValue),
+        viewModel.firstValue,
         {viewModel.dialogState = ConvertDialogState.NONE}
     ){
-        viewModel.updateFirstValue(it.toDouble())
+        viewModel.updateFirstValue(it)
     }
 
     NumberInputDialog(
         viewModel.dialogState == ConvertDialogState.CHANGE_SECOND_VALUE,
-        ConvertHelper.formatNumber(viewModel.maxSigDigits, viewModel.bottomValue),
+        viewModel.secondValue,
         {viewModel.dialogState = ConvertDialogState.NONE}
     ){
-        viewModel.updateSecondValue(it.toDouble())
+        viewModel.updateSecondValue(it)
     }
 }

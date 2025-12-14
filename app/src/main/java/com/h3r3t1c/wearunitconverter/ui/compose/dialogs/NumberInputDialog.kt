@@ -205,11 +205,23 @@ private fun NumberKey(key: String, keyEvent: (String) -> Unit){
                     .clickable { keyEvent(key) }
             )
         }
+        "-" ->{
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_plus_minus),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onTertiary,
+                modifier = Modifier
 
+                    .size(if(isLargeScreen) 34.dp else 28.dp)
+                    .background(MaterialTheme.colorScheme.tertiary, CircleShape)
+                    .clip(CircleShape)
+                    .clickable { keyEvent(key) }
+            )
+        }
         "*", "^" ->{
             Box(modifier = Modifier.fillMaxWidth())
         }
-        ".","-", "C" -> {
+        ".","C" -> {
             Text(
                 key,
                 color = MaterialTheme.colorScheme.onTertiary,

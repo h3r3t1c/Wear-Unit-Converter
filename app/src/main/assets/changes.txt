@@ -1,6 +1,6 @@
 • Updated UI to Material 3
 • Support for wear 6.0
-• App translations
+• Added favorites
 • Improved number input
-• Added Area conversions
+• Added many new conversions
 • New app icon

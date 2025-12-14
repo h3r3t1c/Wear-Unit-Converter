@@ -4,12 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.Dialog
 import androidx.wear.compose.material3.ListHeader
@@ -18,18 +20,20 @@ import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.Text
 import com.h3r3t1c.wearunitconverter.ui.compose.common.ColumnItemType
 import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnPadding
-import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.TypeUnit
+import com.h3r3t1c.wearunitconverter.util.CategoryHelper
+import eu.hansolo.unit.converter.Converter
 
 
 @OptIn(ExperimentalWearFoundationApi::class)
 @Composable
-fun UnitPickerDialog(visible: Boolean, currentUnit: TypeUnit, type: ConverterType, onDismiss: () -> Unit, onUnitPick: (TypeUnit) -> Unit){
+fun UnitPickerDialog(visible: Boolean, currentUnit: Converter.UnitDefinition, type: Converter.Category, onDismiss: () -> Unit, onUnitPick: (Converter.UnitDefinition) -> Unit){
     Dialog(
         visible = visible,
         onDismissRequest = onDismiss
     ) {
-
+        val units = remember(type) {
+            Converter.UnitDefinition.entries.filter { it.UNIT.category == type }
+        }
         val context = LocalContext.current
         val padding = rememberResponsiveColumnPadding(
             first = ColumnItemType.ListHeader,
@@ -53,11 +57,10 @@ fun UnitPickerDialog(visible: Boolean, currentUnit: TypeUnit, type: ConverterTyp
             ) {
                 item("header") {
                     ListHeader {
-                        Text(ConverterType.toDisplayName(context, type), textAlign = TextAlign.Center)
+                        Text(CategoryHelper.getDisplayName(context, type), textAlign = TextAlign.Center)
                     }
                 }
-                items(type.units.size) {
-                    val unit = type.units[it]
+                items(units, key = {it.name}) { unit ->
                     Option(unit, unit == currentUnit) {
                         onUnitPick(unit)
                     }
@@ -67,15 +70,15 @@ fun UnitPickerDialog(visible: Boolean, currentUnit: TypeUnit, type: ConverterTyp
     }
 }
 @Composable
-fun Option(unit: TypeUnit, selected: Boolean, onClick: () -> Unit){
+fun Option(unit: Converter.UnitDefinition, selected: Boolean, onClick: () -> Unit){
     RadioButton(
         selected = selected,
         onSelect = onClick,
         secondaryLabel = {
-            Text(TypeUnit.unitToString(unit))
+            Text(unit.UNIT.unitShort)
         },
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(TypeUnit.unitToString(unit, true))
+        Text(unit.UNIT.unitName)
     }
 }

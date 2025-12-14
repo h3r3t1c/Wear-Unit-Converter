@@ -1,8 +1,7 @@
 package com.h3r3t1c.wearunitconverter.database
 
 import androidx.room.TypeConverter
-import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.TypeUnit
+import eu.hansolo.unit.converter.Converter
 
 open class RoomDBTypeConverter {
 
@@ -16,28 +15,24 @@ open class RoomDBTypeConverter {
         return value.split(",").map { it }
     }
 
+   @TypeConverter
+   fun categoryToString(category: Converter.Category): String {
+       return category.name
+   }
+
     @TypeConverter
-    fun converterTypeToString(type: ConverterType): String {
-        return type.name
+    fun stringToCategory(value: String): Converter.Category {
+        return Converter.Category.valueOf(value)
     }
 
     @TypeConverter
-    fun stringToConverterType(value: String): ConverterType {
-        return try{ ConverterType.valueOf(value) }catch (_: Exception){
-            ConverterType.TEMPERATURE
-        }
+    fun unitDefinitionToString(unit: Converter.UnitDefinition): String {
+        return unit.name
     }
 
     @TypeConverter
-    fun typeUnitToString(type: TypeUnit): String {
-        return type.name
-    }
-
-    @TypeConverter
-    fun stringToTypeUnit(value: String): TypeUnit {
-        return try{ TypeUnit.valueOf(value)} catch (_: Exception){
-            TypeUnit.CELSIUS
-        }
+    fun stringToUnitDefinition(value: String): Converter.UnitDefinition {
+        return Converter.UnitDefinition.valueOf(value)
     }
 
 }

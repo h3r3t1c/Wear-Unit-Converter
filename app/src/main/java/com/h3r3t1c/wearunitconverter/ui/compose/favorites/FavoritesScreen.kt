@@ -34,8 +34,7 @@ import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnP
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.ConfirmDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.NumberInputDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.nav.NavDestination
-import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.TypeUnit
+import com.h3r3t1c.wearunitconverter.util.CategoryHelper
 
 @Composable
 fun FavoritesScreen(navController: NavHostController) {
@@ -105,7 +104,7 @@ private fun Dialogs(viewModel: FavoritesViewModel, navController: NavHostControl
     AddFavoriteDialog(viewModel.showAddFavoriteDialog, onDismiss = { viewModel.showAddFavoriteDialog = false },) {
         viewModel.addFavorite(context, it)
     }
-    ConfirmDialog(viewModel.deleteDialog != null, title = "Delete Favorite", text = "${viewModel.deleteDialog?.let { f ->  "${TypeUnit.unitToString(f.from)} → ${TypeUnit.unitToString(f.to)}\n"} ?: ""}Are you sure you want to delete this favorite?", onDismiss = { viewModel.deleteDialog = null }){
+    ConfirmDialog(viewModel.deleteDialog != null, title = stringResource(R.string.delete_favorite), text = stringResource(R.string.are_you_sure_you_want_to_delete_this_favorite, viewModel.deleteDialog?.let { f -> "${f.from.UNIT.unitShort} → ${f.to.UNIT.unitShort}\n" } ?: ""), onDismiss = { viewModel.deleteDialog = null }){
         viewModel.deleteFavorite(context, viewModel.deleteDialog!!)
     }
     NumberInputDialog(
@@ -122,10 +121,10 @@ private fun NoFavorites(){
     Button(
         onClick = { },
         label = {
-            Text(text = "No Favorites")
+            Text(text = stringResource(R.string.no_favorites))
         },
         secondaryLabel = {
-            Text(text = "Tap the + button above to add a favorite")
+            Text(text = stringResource(R.string.no_favorites_desc))
         },
         colors = ButtonDefaults.filledVariantButtonColors(),
         modifier = Modifier.fillMaxWidth()
@@ -141,11 +140,11 @@ private fun Favorite(f: FavoriteConversion, onDelete: () -> Unit, onClick: () ->
         onClick = onClick,
         onLongClick = onDelete,
         label = {
-            Text(text = "${TypeUnit.unitToString(f.from)} → ${TypeUnit.unitToString(f.to)}", style = MaterialTheme.typography.titleMedium)
+            Text(text = "${f.from.UNIT.unitShort} → ${f.to.UNIT.unitShort}", style = MaterialTheme.typography.titleMedium)
         },
         icon = {
             Icon(
-                imageVector = ImageVector.vectorResource(ConverterType.getIconForType(f.type)),
+                imageVector = ImageVector.vectorResource(CategoryHelper.getIconForCategory(f.type)),
                 contentDescription = null,
             )
         },

@@ -31,11 +31,11 @@ import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnP
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.NumberInputDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.UnitPickerDialog
 import com.h3r3t1c.wearunitconverter.ui.compose.nav.NavDestination
-import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.TypeUnit
+import com.h3r3t1c.wearunitconverter.util.CategoryHelper
+import eu.hansolo.unit.converter.Converter
 
 @Composable
-fun ConvertToOptionsScreen(navController: NavHostController, type: ConverterType, number: String){
+fun ConvertToOptionsScreen(navController: NavHostController, type: Converter.Category, number: String){
     val context = LocalContext.current
     val padding = rememberResponsiveColumnPadding(
         first = ColumnItemType.ListHeader,
@@ -44,11 +44,14 @@ fun ConvertToOptionsScreen(navController: NavHostController, type: ConverterType
     val listState = rememberScalingLazyListState(
         0
     )
+    val units = remember(type) {
+        Converter.UnitDefinition.entries.filter { it.UNIT.category == type }
+    }
     var firstUnit by remember {
-        mutableStateOf(type.units[0])
+        mutableStateOf(units[0])
     }
     var secondUnit by remember {
-        mutableStateOf(type.units[1])
+        mutableStateOf(units[1])
     }
     var currentNumber by remember(number) {
         mutableStateOf(number)
@@ -80,7 +83,7 @@ fun ConvertToOptionsScreen(navController: NavHostController, type: ConverterType
         ) {
             item{
                 ListHeader {
-                    Text(ConverterType.toDisplayName(context, type), textAlign = TextAlign.Center)
+                    Text(CategoryHelper.getDisplayName(context, type), textAlign = TextAlign.Center)
                 }
             }
             item{
@@ -126,7 +129,7 @@ private fun NumberButton(number: String, onChange: (String) -> Unit){
     }
 }
 @Composable
-private fun UnitButton(title: String, unit: TypeUnit, type: ConverterType, onChange: (TypeUnit) -> Unit){
+private fun UnitButton(title: String, unit: Converter.UnitDefinition, type: Converter.Category, onChange: (Converter.UnitDefinition) -> Unit){
     var showDialog by remember {
         mutableStateOf(false)
     }
@@ -138,7 +141,7 @@ private fun UnitButton(title: String, unit: TypeUnit, type: ConverterType, onCha
             Text(text = title)
         },
         secondaryLabel = {
-            Text(text = TypeUnit.unitToString(unit, true), maxLines = 3)
+            Text(text = unit.UNIT.unitName, maxLines = 3)
         },
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.filledTonalButtonColors()

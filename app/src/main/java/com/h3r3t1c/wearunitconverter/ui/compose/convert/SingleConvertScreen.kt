@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.Text
-import com.h3r3t1c.wearunitconverter.util.ConvertHelper
 
 @Composable
 fun SingleConvertScreen(viewModel: ConvertViewModel){
@@ -38,24 +38,24 @@ fun SingleConvertScreen(viewModel: ConvertViewModel){
             modifier = Modifier.fillMaxSize().background(Color.Black),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            UnitButton(viewModel.topUnitString) {
+            UnitButton(viewModel.firstUnit.UNIT.unitShort, PaddingValues(top = 4.dp)) {
                 viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_UNIT
             }
-            Value(viewModel.topValue, viewModel.maxSigDigits){
+            Value(viewModel.firstValue){
                 viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_VALUE
             }
             Text("=")
-            Value(viewModel.bottomValue, viewModel.maxSigDigits){
+            Value(viewModel.secondValue){
                 viewModel.dialogState = ConvertDialogState.CHANGE_SECOND_VALUE
             }
-            UnitButton(viewModel.bottomUnitString) {
+            UnitButton(viewModel.secondUnit.UNIT.unitShort, PaddingValues(bottom = 4.dp)) {
                 viewModel.dialogState = ConvertDialogState.CHANGE_SECOND_UNIT
             }
         }
     }
 }
 @Composable
-private fun UnitButton(text: String, onClick: () -> Unit){
+private fun UnitButton(text: String, padding: PaddingValues, onClick: () -> Unit){
     Box(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -67,11 +67,11 @@ private fun UnitButton(text: String, onClick: () -> Unit){
             },
         contentAlignment = Alignment.Center
     ){
-        Text(text, color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
+        Text(text, color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.numeralExtraSmall, modifier = Modifier.padding(padding))
     }
 }
 @Composable
-private fun ColumnScope.Value(value: Double, maxDigits: Int, onClick: () -> Unit){
+private fun ColumnScope.Value(value: String, onClick: () -> Unit){
     val context = LocalContext.current
     Box(
         modifier = Modifier
@@ -83,7 +83,7 @@ private fun ColumnScope.Value(value: Double, maxDigits: Int, onClick: () -> Unit
         contentAlignment = Alignment.Center
     ){
         BasicText(
-            text = ConvertHelper.formatNumber(maxDigits, value),
+            text = value,
             maxLines = 1,
             style = TextStyle(
                 color = Color.White,

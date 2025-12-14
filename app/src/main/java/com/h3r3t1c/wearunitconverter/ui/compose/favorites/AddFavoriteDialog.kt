@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
@@ -29,8 +30,8 @@ import com.h3r3t1c.wearunitconverter.database.data.FavoriteConversion
 import com.h3r3t1c.wearunitconverter.ui.compose.common.ColumnItemType
 import com.h3r3t1c.wearunitconverter.ui.compose.common.rememberResponsiveColumnPadding
 import com.h3r3t1c.wearunitconverter.ui.compose.dialogs.UnitPickerDialog
-import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.TypeUnit
+import com.h3r3t1c.wearunitconverter.util.CategoryHelper
+import eu.hansolo.unit.converter.Converter
 
 @Composable
 fun AddFavoriteDialog(visible: Boolean, onDismiss: () -> Unit, onAdd: (FavoriteConversion) -> Unit){
@@ -38,9 +39,9 @@ fun AddFavoriteDialog(visible: Boolean, onDismiss: () -> Unit, onAdd: (FavoriteC
         visible = visible,
         onDismissRequest = onDismiss
     ) {
-        var type by remember { mutableStateOf(ConverterType.TEMPERATURE) }
-        var from by remember { mutableStateOf(ConverterType.TEMPERATURE.units[0]) }
-        var to by remember { mutableStateOf(ConverterType.TEMPERATURE.units[1]) }
+        var type by remember { mutableStateOf(Converter.Category.TEMPERATURE) }
+        var from by remember { mutableStateOf(Converter.UnitDefinition.FAHRENHEIT) }
+        var to by remember { mutableStateOf(Converter.UnitDefinition.CELSIUS) }
 
         val padding = rememberResponsiveColumnPadding(
             first = ColumnItemType.ListHeader,
@@ -73,25 +74,26 @@ fun AddFavoriteDialog(visible: Boolean, onDismiss: () -> Unit, onAdd: (FavoriteC
             ) {
                 item{
                     ListHeader {
-                        Text("Add Favorite")
+                        Text(stringResource(R.string.add_favorite))
                     }
                 }
                 item{
                     Type(type){
                         type = it
-                        from = it.units[0]
-                        to = it.units[1]
+                        val units = Converter.UnitDefinition.entries.filter { c-> c.UNIT.category == type }
+                        from = units[0]
+                        to = units[1]
                     }
                 }
                 item{
-                    Unit("From", from, type){
+                    Unit(stringResource(R.string.from), from, type){
                         if(to == it)
                             to = from
                         from = it
                     }
                 }
                 item{
-                    Unit("To", to, type){
+                    Unit(stringResource(R.string.to), to, type){
                         if(from == it)
                             from = to
                         to = it
@@ -102,27 +104,27 @@ fun AddFavoriteDialog(visible: Boolean, onDismiss: () -> Unit, onAdd: (FavoriteC
     }
 }
 @Composable
-private fun Type(type: ConverterType, onChange: (ConverterType) -> Unit){
+private fun Type(type: Converter.Category, onChange: (Converter.Category) -> Unit){
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
     Button(
         onClick = { showDialog = true },
         label = {
-            Text("Type", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.type), style = MaterialTheme.typography.titleMedium)
         },
         secondaryLabel = {
-            Text(text = ConverterType.toDisplayName(context, type))
+            Text(text = CategoryHelper.getDisplayName(context, type))
         },
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.filledTonalButtonColors()
     )
-    TypePickerDialog(showDialog, onDismiss = { showDialog = false }){
+    CategoryPickerDialog(showDialog, onDismiss = { showDialog = false }){
         onChange(it)
         showDialog = false
     }
 }
 @Composable
-private fun Unit(title: String, unit: TypeUnit, type: ConverterType, onChange: (TypeUnit) -> Unit){
+private fun Unit(title: String, unit: Converter.UnitDefinition, type: Converter.Category, onChange: (Converter.UnitDefinition) -> Unit){
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
     Button(
@@ -131,7 +133,7 @@ private fun Unit(title: String, unit: TypeUnit, type: ConverterType, onChange: (
             Text(title, style = MaterialTheme.typography.titleMedium)
         },
         secondaryLabel = {
-            Text(text = TypeUnit.unitToString(unit, true))
+            Text(text = "${unit.UNIT.unitName} (${unit.UNIT.unitShort})", maxLines = 3)
         },
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.filledTonalButtonColors()

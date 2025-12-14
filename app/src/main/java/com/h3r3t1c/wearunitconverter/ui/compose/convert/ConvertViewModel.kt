@@ -2,7 +2,7 @@ package com.h3r3t1c.wearunitconverter.ui.compose.convert
 
 import android.content.Context
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -10,73 +10,67 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.h3r3t1c.wearunitconverter.util.AppPrefs
-import com.h3r3t1c.wearunitconverter.util.ConvertHelper
-import com.h3r3t1c.wearunitconverter.util.ConverterType
-import com.h3r3t1c.wearunitconverter.util.TypeUnit
+import eu.hansolo.unit.converter.Converter
 
-class ConvertViewModel(context: Context, val type: ConverterType, number: String, mFirstUnit: TypeUnit, var secondUnit: TypeUnit): ViewModel() {
+class ConvertViewModel(context: Context, val type: Converter.Category, number: String, mFirstUnit: Converter.UnitDefinition,  mSecondUnit: Converter.UnitDefinition): ViewModel() {
 
     var dialogState by mutableStateOf(ConvertDialogState.NONE)
-    var topValue by mutableDoubleStateOf(number.toDouble())
-    var bottomValue by mutableDoubleStateOf(0.0)
-    var topUnitString by mutableStateOf("")
-    var bottomUnitString by mutableStateOf("")
+    var firstValue by mutableStateOf(number)
+    var secondValue by mutableStateOf("")
     var firstUnit by mutableStateOf(mFirstUnit)
+    var secondUnit by mutableStateOf(mSecondUnit)
+
     val maxSigDigits = AppPrefs.getMaxSigDigits(context)
+    private val useEngineerNotation = AppPrefs.getUseEngineerNotation(context)
+
+    val conversions = mutableStateListOf<Pair<String, Converter.UnitDefinition>>()
+    val units = Converter.UnitDefinition.entries.filter { it.UNIT.category == type }
 
     init {
-        bottomUnitString = TypeUnit.unitToString(secondUnit)
-        updateFirstUnit(firstUnit)
+        val converter = Converter(type, firstUnit, maxSigDigits)
+        secondValue = converter.convertToString(firstValue.toDouble(), secondUnit, useEngineerNotation)
+        updateConversions(converter)
     }
 
-    fun updateFirstUnit(unit: TypeUnit) {
+    fun updateFirstUnit(unit: Converter.UnitDefinition) {
         dialogState = ConvertDialogState.NONE
-        if(secondUnit == unit) {
-            secondUnit = firstUnit
-            firstUnit = unit
-            bottomUnitString = TypeUnit.unitToString(secondUnit)
-            topUnitString = TypeUnit.unitToString(firstUnit)
-            val tmp = bottomValue
-            bottomValue = topValue
-            topValue = tmp
-        }else {
-            firstUnit = unit
-            topUnitString = TypeUnit.unitToString(unit)
-            bottomValue = ConvertHelper.convertUnitsRaw(topValue, firstUnit, secondUnit)
+        firstUnit = unit
+        val converter = Converter(type, firstUnit, maxSigDigits)
+        secondValue = converter.convertToString(firstValue.toDouble(), secondUnit, useEngineerNotation)
+        updateConversions(converter)
+    }
+    fun updateSecondUnit(unit: Converter.UnitDefinition){
+        dialogState = ConvertDialogState.NONE
+        secondUnit = unit
+        val converter = Converter(type, firstUnit, maxSigDigits)
+        secondValue = converter.convertToString(firstValue.toDouble(), secondUnit, useEngineerNotation)
+        updateConversions(converter)
+    }
+    fun updateFirstValue(value: String) {
+        dialogState = ConvertDialogState.NONE
+        firstValue = value
+        val converter = Converter(type, firstUnit, maxSigDigits)
+        secondValue = converter.convertToString(firstValue.toDouble(), secondUnit, useEngineerNotation)
+        updateConversions(converter)
+    }
+    fun updateSecondValue(value: String){
+        dialogState = ConvertDialogState.NONE
+        secondValue = value
+        val converter = Converter(type, secondUnit, maxSigDigits)
+        firstValue = converter.convertToString(secondValue.toDouble(), firstUnit, useEngineerNotation)
+        updateConversions(converter)
+    }
+    private fun updateConversions(converter: Converter){
+        conversions.clear()
+        units.filter { it != firstUnit}.forEach {
+            conversions.add(Pair(converter.convertToString(firstValue.toDouble(), it, useEngineerNotation), it))
         }
-    }
-    fun updateSecondUnit(unit: TypeUnit){
-        dialogState = ConvertDialogState.NONE
-        if(firstUnit == unit) {
-            firstUnit = secondUnit
-            secondUnit = unit
-            bottomUnitString = TypeUnit.unitToString(secondUnit)
-            topUnitString = TypeUnit.unitToString(firstUnit)
-            val tmp = topValue
-            topValue = bottomValue
-            bottomValue = tmp
-        }else {
-            secondUnit = unit
-            bottomUnitString = TypeUnit.unitToString(unit)
-            topValue = ConvertHelper.convertUnitsRaw(bottomValue, secondUnit, firstUnit)
-        }
-    }
-    fun updateFirstValue(value: Double) {
-        dialogState = ConvertDialogState.NONE
-        topValue = value
-        bottomValue = ConvertHelper.convertUnitsRaw(topValue, firstUnit, secondUnit)
-    }
-    fun updateSecondValue(value: Double){
-        dialogState = ConvertDialogState.NONE
-        bottomValue = value
-        topValue = ConvertHelper.convertUnitsRaw(bottomValue, secondUnit, firstUnit)
     }
     companion object{
         fun getFactory(context: Context, type: String, number: String, firstUnit: String, secondUnit: String): ViewModelProvider.Factory{
             val factory : ViewModelProvider.Factory = viewModelFactory {
                 initializer {
-                    val type = ConverterType.valueOf(type)
-                    ConvertViewModel(context, type, number, TypeUnit.valueOf(firstUnit), TypeUnit.valueOf(secondUnit))
+                    ConvertViewModel(context, Converter.Category.valueOf(type), number, Converter.UnitDefinition.valueOf(firstUnit), Converter.UnitDefinition.valueOf(secondUnit))
                 }
             }
             return factory

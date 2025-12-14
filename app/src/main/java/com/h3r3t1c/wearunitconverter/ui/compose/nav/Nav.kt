@@ -11,7 +11,7 @@ import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.h3r3t1c.wearunitconverter.ui.compose.convert.ConvertMainScreen
 import com.h3r3t1c.wearunitconverter.ui.compose.convert.ConvertToOptionsScreen
 import com.h3r3t1c.wearunitconverter.ui.compose.home.HomeScreen
-import com.h3r3t1c.wearunitconverter.util.ConverterType
+import eu.hansolo.unit.converter.Converter
 
 @Composable
 fun Nav(destination: String) {
@@ -36,7 +36,7 @@ fun Nav(destination: String) {
             composable(NavDestination.CONVERT_TO_OPTIONS_PATH) {
                 val type = it.arguments?.getString("type")!!
                 val number = it.arguments?.getString("inputNumber")!!
-                ConvertToOptionsScreen(navController, ConverterType.valueOf(type), number)
+                ConvertToOptionsScreen(navController, Converter.Category.valueOf(type), number)
             }
         }
     }

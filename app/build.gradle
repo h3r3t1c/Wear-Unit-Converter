@@ -53,6 +53,7 @@ android {
 
 dependencies {
 
+    implementation(project(":converter"))
 
     implementation 'com.google.android.gms:play-services-wearable:19.0.0'
     implementation 'androidx.compose.ui:ui'

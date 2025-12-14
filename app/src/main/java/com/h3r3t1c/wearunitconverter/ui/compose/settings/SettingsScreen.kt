@@ -23,6 +23,7 @@ import androidx.wear.compose.material3.ListHeader
 import androidx.wear.compose.material3.OpenOnPhoneDialog
 import androidx.wear.compose.material3.OpenOnPhoneDialogDefaults
 import androidx.wear.compose.material3.ScreenScaffold
+import androidx.wear.compose.material3.SwitchButton
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.openOnPhoneDialogCurvedText
 import com.h3r3t1c.wearunitconverter.R
@@ -68,6 +69,13 @@ fun SettingsScreen(navController: NavHostController){
                     is SettingsOption.ClickOption -> {
                         ClickOption(it)
                     }
+
+                    is SettingsOption.BoolOption -> {
+                        val op = it
+                        BoolOption(op) {
+                            viewModel.updateBool(context,op)
+                        }
+                    }
                 }
             }
         }
@@ -86,6 +94,15 @@ fun SettingsScreen(navController: NavHostController){
 private fun Dialogs(viewModel: SettingsViewModel){
     DecimalLengthDialog(viewModel.dialogState == SettingsDialogState.SET_MAX_DECI) {
         viewModel.dialogState = SettingsDialogState.NONE
+    }
+}
+@Composable
+private fun BoolOption(option: SettingsOption.BoolOption, onChange: (Boolean) -> Unit){
+    SwitchButton(
+        checked = option.bool,
+        onCheckedChange = onChange,
+    ) {
+        Text(stringResource(option.stringResource))
     }
 }
 

@@ -16,6 +16,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.wear.remote.interactions.RemoteActivityHelper
 import com.h3r3t1c.wearunitconverter.BuildConfig
 import com.h3r3t1c.wearunitconverter.R
+import com.h3r3t1c.wearunitconverter.util.AppPrefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
@@ -31,6 +32,7 @@ class SettingsViewModel(context: Context): ViewModel() {
         options.add(SettingsOption.ClickOption(R.string.max_decimal_places, R.drawable.ic_decimal_places){
             dialogState = SettingsDialogState.SET_MAX_DECI
         })
+        options.add(SettingsOption.BoolOption(R.string.use_engineer_notation, AppPrefs.getUseEngineerNotation(context), AppPrefs.PREF_BOOL_USE_ENGINEER_NOTATION))
         options.add(SettingsOption.Header(R.string.support))
         options.add(SettingsOption.ClickOption(R.string.support_email, R.drawable.ic_email){
             openRemoteUrl(context, "mailto:th3h3r3t1c@gmail.com")
@@ -44,7 +46,19 @@ class SettingsViewModel(context: Context): ViewModel() {
         options.add(SettingsOption.ClickOption(R.string.app_github, R.drawable.ic_github){
             openRemoteUrl(context, "https://github.com/h3r3t1c/Wear-Unit-Converter")
         })
+        options.add(SettingsOption.ClickOption(R.string.converter, R.drawable.ic_github){
+            openRemoteUrl(context, "https://github.com/HanSolo/converter")
+        })
         options.add(SettingsOption.Info(R.string.version, "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})", R.drawable.ic_info))
+    }
+
+    fun updateBool(context: Context, option: SettingsOption.BoolOption){
+        val index = options.indexOf(option)
+        options[index] = option.copy(bool = !option.bool)
+        when(option.mKey) {
+            AppPrefs.PREF_BOOL_USE_ENGINEER_NOTATION -> AppPrefs.setUseEngineerNotation(context, !option.bool)
+            else ->{}
+        }
     }
 
     private fun openLocalUrl(context: Context, url: String){
