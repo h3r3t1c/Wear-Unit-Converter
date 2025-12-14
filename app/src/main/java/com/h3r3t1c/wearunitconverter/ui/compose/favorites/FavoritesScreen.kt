@@ -104,7 +104,7 @@ private fun Dialogs(viewModel: FavoritesViewModel, navController: NavHostControl
     AddFavoriteDialog(viewModel.showAddFavoriteDialog, onDismiss = { viewModel.showAddFavoriteDialog = false },) {
         viewModel.addFavorite(context, it)
     }
-    ConfirmDialog(viewModel.deleteDialog != null, title = stringResource(R.string.delete_favorite), text = stringResource(R.string.are_you_sure_you_want_to_delete_this_favorite, viewModel.deleteDialog?.let { f -> "${f.from.UNIT.unitShort} → ${f.to.UNIT.unitShort}\n" } ?: ""), onDismiss = { viewModel.deleteDialog = null }){
+    ConfirmDialog(viewModel.deleteDialog != null, title = stringResource(R.string.delete_favorite), text = stringResource(R.string.are_you_sure_you_want_to_delete_this_favorite, viewModel.deleteDialog?.let { f -> "${f.from.UNIT.unitShort} ➡ ${f.to.UNIT.unitShort}\n" } ?: ""), onDismiss = { viewModel.deleteDialog = null }){
         viewModel.deleteFavorite(context, viewModel.deleteDialog!!)
     }
     NumberInputDialog(
@@ -140,7 +140,7 @@ private fun Favorite(f: FavoriteConversion, onDelete: () -> Unit, onClick: () ->
         onClick = onClick,
         onLongClick = onDelete,
         label = {
-            Text(text = "${f.from.UNIT.unitShort} → ${f.to.UNIT.unitShort}", style = MaterialTheme.typography.titleMedium)
+            Text(text = "${f.from.UNIT.unitShort} ➡ ${f.to.UNIT.unitShort}", style = MaterialTheme.typography.titleMedium)
         },
         icon = {
             Icon(

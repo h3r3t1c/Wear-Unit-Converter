@@ -12,4 +12,19 @@ data class FavoriteConversion(
     val from: Converter.UnitDefinition,
     val to: Converter.UnitDefinition,
 ) {
+
+    override fun hashCode(): Int {
+        return id + type.hashCode() + from.hashCode() + to.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as FavoriteConversion
+        if (id != other.id) return false
+        if (type != other.type) return false
+        if (from != other.from) return false
+        if (to != other.to) return false
+        return true
+    }
 }
