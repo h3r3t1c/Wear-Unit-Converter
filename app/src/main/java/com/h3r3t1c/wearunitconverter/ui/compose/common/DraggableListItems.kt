@@ -1,6 +1,5 @@
 package com.h3r3t1c.wearunitconverter.ui.compose.common
 
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -145,61 +144,23 @@ class DraggableListState internal constructor(
         val draggingItem = draggingItemLayoutInfo ?: return
         val startOffset = draggingItem.unadjustedOffset + draggingItemOffset
         val endOffset = startOffset + draggingItem.size
-        val middleOffset = startOffset + (endOffset - startOffset) / 2f
-
-
-        Log.d("zzz", "size ${draggingItem.size} ")
+        val middleOffset = startOffset + (endOffset - startOffset) * .5
 
         val targetItem = listState.layoutInfo.visibleItemsInfo.find { item ->
-             /*middleOffset.toInt() in item.unadjustedOffset ..item.offsetEnd &&
-                    draggingItem.index != item.index*/
-            item.index+1 == draggingItem.index  || item.index-1 == draggingItem.index
+             middleOffset.toInt() in item.offset ..item.offsetEnd &&
+                    draggingItem.index != item.index
         }
-        //Log.d("zzz", "targetItem found ${targetItem != null}")
+
         if (targetItem != null) {
-            /*if (
-                draggingItem.index == listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ||
-                targetItem.index == listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index
-            ) {
-                scope.launch {
-                    listState.animateScrollToItem(listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ?:0, 0)
-                }
-                //
-                /*listState.requestScrollToItem(
-                    listState.firstVisibleItemIndex,
-                    listState.firstVisibleItemScrollOffset
-                )*/
-                Log.d("zzz", "first item")
-            }else{
-                scope.launch {
-                    listState.animateScrollToItem(listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?:0, 0)
-                }
-                Log.d("zzz", "last item")
-            }*/
             draggingItemIndex = targetItem.index
+            scope.launch { listState.scrollToItem(targetItem.index, -targetItem.offset) }
             onMove(draggingItem.index, targetItem.index)
-
-        } else {
-            /*val overscroll = when {
-                draggingItemDraggedDelta > 0 ->
-                    (endOffset - listState.layoutInfo.viewportEndOffset).coerceAtLeast(0f)
-
-                draggingItemDraggedDelta < 0 ->
-                    (startOffset - listState.layoutInfo.viewportStartOffset).coerceAtMost(0f)
-
-                else -> 0f
-            }
-            if (overscroll != 0f) {
-                Log.d("zzz", "overscroll $overscroll")
-                scrollChannel.trySend(overscroll)
-            }*/
         }
     }
 
     private val ScalingLazyListItemInfo.offsetEnd: Int
-        get() = this.unadjustedOffset + this.unadjustedSize
-    private val ScalingLazyListItemInfo.realOffset: Int
-        get() = this.offset
+        get() = this.offset + this.size
+
 
 }
 
@@ -318,10 +279,10 @@ inline fun <T> ScalingLazyListScope.draggableItemsIndexed(
             .graphicsLayer { translationY = state.draggingItemOffset }
     } else if (index == state.previousIndexOfDraggedItem) {
         Modifier
-            .zIndex(1f)
-            .graphicsLayer { translationY = state.previousItemOffset.value }
+            //.zIndex(1f)
+            .graphicsLayer { translationY = state.previousItemOffset.value}
     } else {
-        Modifier.zIndex(1f)//.animateItem(fadeInSpec = null, fadeOutSpec = null)
+        Modifier//.zIndex(1f)//.animateItem(fadeInSpec = null, fadeOutSpec = null)
     }
     Box(modifier = draggingModifier) {
         itemContent(index, item, isDragging)

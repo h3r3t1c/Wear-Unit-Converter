@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,6 +24,7 @@ import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.ButtonDefaults
 import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.ListHeader
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.Text
@@ -68,24 +70,30 @@ fun ReorderFavoritesScreen(){
                 .fillMaxSize()
                 .background(Color.Black)
         ) {
-            /*item{
+            item("header"){
                 ListHeader {
-                    Text(text = "Reorder Favorites")
+                    Text(text = stringResource(R.string.reorder_favorites))
                 }
-            }*/
+            }
             draggableItemsIndexed(
                 state = draggableState,
                 items = viewModel.favs,
-                key = { _, item -> item.id }
+                key = { index, item -> index }
             ) { index, item, isDragging ->
                 Row(
-                    modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 48.dp).background(MaterialTheme.colorScheme.surfaceContainer, ButtonDefaults.shape).padding(ButtonDefaults.ContentPadding),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .defaultMinSize(minHeight = 48.dp)
+                        .background(MaterialTheme.colorScheme.surfaceContainer, ButtonDefaults.shape)
+                        .padding(ButtonDefaults.ContentPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = CategoryHelper.getIconForCategory(item.type)),
                         contentDescription = null,
-                        modifier = Modifier.padding(end = ButtonDefaults.IconSpacing).size(ButtonDefaults.IconSize),
+                        modifier = Modifier
+                            .padding(end = ButtonDefaults.IconSpacing)
+                            .size(ButtonDefaults.IconSize),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                     Text(text = item.displayString(), modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurface)
@@ -94,7 +102,7 @@ fun ReorderFavoritesScreen(){
                         contentDescription = null,
                         modifier = Modifier.dragHandle(
                             state = draggableState,
-                            key = item.id,
+                            index = index,
                         ),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
@@ -109,7 +117,9 @@ fun ReorderFavoritesScreen(){
 
 @Composable
 private fun Loading(){
-    Box(Modifier.fillMaxSize().background(Color.Black.copy(0.6f)), contentAlignment = Alignment.Center){
+    Box(Modifier
+        .fillMaxSize()
+        .background(Color.Black.copy(0.6f)), contentAlignment = Alignment.Center){
         CircularProgressIndicator()
     }
 }

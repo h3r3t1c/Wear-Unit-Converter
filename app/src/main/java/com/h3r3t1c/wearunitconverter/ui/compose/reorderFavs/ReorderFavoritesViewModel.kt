@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.h3r3t1c.wearunitconverter.database.data.FavoriteConversion
 import com.h3r3t1c.wearunitconverter.ext.favsDatabase
+import com.h3r3t1c.wearunitconverter.tile.FavoritesTile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -31,10 +32,18 @@ class ReorderFavoritesViewModel(context: Context): ViewModel() {
     }
 
     fun move(from: Int, to: Int){
-        val f = favs.removeAt(from)
-        favs.add(to, f)
+        if(from >= favs.size || to >= favs.size) return
+        favs.add(to, favs.removeAt(from))
     }
 
+    fun save(context: Context){
+        viewModelScope.launch(Dispatchers.IO) {
+            favs.forEachIndexed { index, favoriteConversion ->
+                context.favsDatabase.add(favoriteConversion.copy(sortOrder = index.toLong()))
+            }
+            FavoritesTile.refresh(context)
+        }
+    }
     companion object{
         fun getFactory(context: Context,): ViewModelProvider.Factory{
             val factory : ViewModelProvider.Factory = viewModelFactory {

@@ -34,24 +34,31 @@ fun SingleConvertScreen(viewModel: ConvertViewModel){
     ScreenScaffold(
         timeText = {}
     ) {
-        Column(
+        Box(
             modifier = Modifier.fillMaxSize().background(Color.Black),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            UnitButton(viewModel.firstUnit.UNIT.unitShort, PaddingValues(top = 4.dp)) {
-                viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_UNIT
+            contentAlignment = Alignment.Center
+        ){
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                UnitButton(viewModel.firstUnit.UNIT.unitShort, PaddingValues(top = 6.dp)) {
+                    viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_UNIT
+                }
+                Value(viewModel.firstValue){
+                    viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_VALUE
+                }
+
+                Value(viewModel.secondValue){
+                    viewModel.dialogState = ConvertDialogState.CHANGE_SECOND_VALUE
+                }
+                UnitButton(viewModel.secondUnit.UNIT.unitShort, PaddingValues(bottom = 6.dp)) {
+                    viewModel.dialogState = ConvertDialogState.CHANGE_SECOND_UNIT
+                }
             }
-            Value(viewModel.firstValue){
-                viewModel.dialogState = ConvertDialogState.CHANGE_FIRST_VALUE
-            }
-            Text("=")
-            Value(viewModel.secondValue){
-                viewModel.dialogState = ConvertDialogState.CHANGE_SECOND_VALUE
-            }
-            UnitButton(viewModel.secondUnit.UNIT.unitShort, PaddingValues(bottom = 4.dp)) {
-                viewModel.dialogState = ConvertDialogState.CHANGE_SECOND_UNIT
-            }
+            Text("=", style = MaterialTheme.typography.numeralExtraSmall)
         }
+
     }
 }
 @Composable

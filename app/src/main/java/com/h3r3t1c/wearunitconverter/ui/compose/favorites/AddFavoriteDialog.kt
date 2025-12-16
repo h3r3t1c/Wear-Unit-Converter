@@ -133,7 +133,7 @@ private fun Unit(title: String, unit: Converter.UnitDefinition, type: Converter.
             Text(title, style = MaterialTheme.typography.titleMedium)
         },
         secondaryLabel = {
-            Text(text = "${unit.UNIT.unitName} (${unit.UNIT.unitShort})", maxLines = 3)
+            Text(text = "${unit.UNIT.unitName} (${unit.UNIT.unitShort})", maxLines = 4)
         },
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.filledTonalButtonColors()

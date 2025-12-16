@@ -52,4 +52,5 @@
     <string name="tile_favorite_conversions">Favorite Conversions</string>
     <string name="tap_to_add_favorites">Tap to add favorites</string>
     <string name="favorites_tile">Favorites Tile</string>
+    <string name="reorder_favorites">Reorder Favorites</string>
 </resources>

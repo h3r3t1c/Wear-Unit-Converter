@@ -389,7 +389,7 @@ private fun MaterialScope.fullLengthCard(context: Context, fav: FavoriteConversi
     )
     row.addContent(
         text(
-            "${fav.from.UNIT.unitShort} $ARROW ${fav.to.UNIT.unitShort}".layoutString,
+            fav.displayString().layoutString,
             color = colorScheme.onPrimaryContainer,
             typography = Typography.TITLE_MEDIUM,
             maxLines = 1,
@@ -413,8 +413,8 @@ private fun convertClick(fav: FavoriteConversion, context: Context):ModifiersBui
 val favs = listOf(
     FavoriteConversion(0, Converter.Category.TEMPERATURE, Converter.UnitDefinition.FAHRENHEIT, Converter.UnitDefinition.CELSIUS, 0L),
     FavoriteConversion(0, Converter.Category.LENGTH, Converter.UnitDefinition.INCHES, Converter.UnitDefinition.FEET, 0L),
-    //FavoriteConversion(0, Converter.Category.SPEED, Converter.UnitDefinition.MILES_PER_HOUR, Converter.UnitDefinition.KILOMETER_PER_HOUR, 0L),
-    //FavoriteConversion(0, Converter.Category.MASS, Converter.UnitDefinition.POUND, Converter.UnitDefinition.KILOGRAM, 0L)
+    FavoriteConversion(0, Converter.Category.SPEED, Converter.UnitDefinition.MILES_PER_HOUR, Converter.UnitDefinition.KILOMETER_PER_HOUR, 0L),
+    FavoriteConversion(0, Converter.Category.MASS, Converter.UnitDefinition.POUND, Converter.UnitDefinition.KILOGRAM, 0L)
 )
 
 @Preview(device = WearDevices.SMALL_ROUND)

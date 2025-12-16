@@ -123,7 +123,7 @@ private fun Dialogs(viewModel: FavoritesViewModel, navController: NavHostControl
     AddFavoriteDialog(viewModel.showAddFavoriteDialog, onDismiss = { viewModel.showAddFavoriteDialog = false },) {
         viewModel.addFavorite(context, it)
     }
-    ConfirmDialog(viewModel.deleteDialog != null, title = stringResource(R.string.delete_favorite), text = stringResource(R.string.are_you_sure_you_want_to_delete_this_favorite, viewModel.deleteDialog?.displayString() ?: ""), onDismiss = { viewModel.deleteDialog = null }){
+    ConfirmDialog(viewModel.deleteDialog != null, title = stringResource(R.string.delete_favorite), text = stringResource(R.string.are_you_sure_you_want_to_delete_this_favorite, viewModel.deleteDialog?.displayString()?.let { "$it\n" } ?: ""), onDismiss = { viewModel.deleteDialog = null }){
         viewModel.deleteFavorite(context, viewModel.deleteDialog!!)
     }
     NumberInputDialog(
@@ -143,7 +143,7 @@ private fun NoFavorites(){
             Text(text = stringResource(R.string.no_favorites))
         },
         secondaryLabel = {
-            Text(text = stringResource(R.string.no_favorites_desc))
+            Text(text = stringResource(R.string.no_favorites_desc), maxLines = 3)
         },
         colors = ButtonDefaults.filledVariantButtonColors(),
         modifier = Modifier.fillMaxWidth()
