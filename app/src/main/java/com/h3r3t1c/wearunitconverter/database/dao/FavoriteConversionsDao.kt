@@ -11,8 +11,14 @@ import com.h3r3t1c.wearunitconverter.database.data.FavoriteConversion
 @Dao
 interface FavoriteConversionsDao {
 
-    @Query("SELECT * FROM FavoriteConversion")
+    @Query("SELECT * FROM FavoriteConversion ORDER BY sortOrder ASC")
     fun getAll(): PagingSource<Int, FavoriteConversion>
+
+    @Query("SELECT * FROM FavoriteConversion ORDER BY sortOrder ASC")
+    fun getAllForSorting(): List<FavoriteConversion>
+
+    @Query("SELECT * FROM FavoriteConversion LIMIT 4")
+    fun getFavoritesForTile() : List<FavoriteConversion>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(conversion: FavoriteConversion)

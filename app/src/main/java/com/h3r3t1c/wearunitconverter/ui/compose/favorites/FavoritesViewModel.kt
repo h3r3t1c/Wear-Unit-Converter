@@ -14,6 +14,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.h3r3t1c.wearunitconverter.database.data.FavoriteConversion
 import com.h3r3t1c.wearunitconverter.ext.favsDatabase
+import com.h3r3t1c.wearunitconverter.tile.FavoritesTile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -32,12 +33,14 @@ class FavoritesViewModel(context: Context): ViewModel() {
         showAddFavoriteDialog = false
         viewModelScope.launch(Dispatchers.IO) {
             context.favsDatabase.add(f)
+            FavoritesTile.refresh(context)
         }
     }
     fun deleteFavorite(context: Context, f: FavoriteConversion){
         deleteDialog = null
         viewModelScope.launch(Dispatchers.IO) {
             context.favsDatabase.remove(f)
+            FavoritesTile.refresh(context)
         }
     }
 

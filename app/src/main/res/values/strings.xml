@@ -49,4 +49,7 @@
     <string name="are_you_sure_you_want_to_delete_this_favorite">%1$sAre you sure you want to delete this favorite?</string>
     <string name="use_engineer_notation">Use Engineer Notation</string>
     <string name="more">More</string>
+    <string name="tile_favorite_conversions">Favorite Conversions</string>
+    <string name="tap_to_add_favorites">Tap to add favorites</string>
+    <string name="favorites_tile">Favorites Tile</string>
 </resources>

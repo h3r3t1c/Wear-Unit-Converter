@@ -2,8 +2,11 @@ package com.h3r3t1c.wearunitconverter.ui.compose.favorites
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,6 +15,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
@@ -65,14 +69,29 @@ fun FavoritesScreen(navController: NavHostController) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Button(
-                        onClick = { viewModel.showAddFavoriteDialog = true },
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_add),
-                            contentDescription = null,
-                        )
+                    Row() {
+                        Button(
+                            onClick = {
+                                navController.navigate(NavDestination.REORDER_FAVORITES)
+                            },
+                            enabled = favs.itemCount > 0,
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.ic_sort),
+                                contentDescription = null,
+                            )
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Button(
+                            onClick = { viewModel.showAddFavoriteDialog = true },
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.ic_add),
+                                contentDescription = null,
+                            )
+                        }
                     }
+
                     ListHeader {
                         Text(stringResource(R.string.favorites))
                     }
@@ -104,7 +123,7 @@ private fun Dialogs(viewModel: FavoritesViewModel, navController: NavHostControl
     AddFavoriteDialog(viewModel.showAddFavoriteDialog, onDismiss = { viewModel.showAddFavoriteDialog = false },) {
         viewModel.addFavorite(context, it)
     }
-    ConfirmDialog(viewModel.deleteDialog != null, title = stringResource(R.string.delete_favorite), text = stringResource(R.string.are_you_sure_you_want_to_delete_this_favorite, viewModel.deleteDialog?.let { f -> "${f.from.UNIT.unitShort} ➡ ${f.to.UNIT.unitShort}\n" } ?: ""), onDismiss = { viewModel.deleteDialog = null }){
+    ConfirmDialog(viewModel.deleteDialog != null, title = stringResource(R.string.delete_favorite), text = stringResource(R.string.are_you_sure_you_want_to_delete_this_favorite, viewModel.deleteDialog?.displayString() ?: ""), onDismiss = { viewModel.deleteDialog = null }){
         viewModel.deleteFavorite(context, viewModel.deleteDialog!!)
     }
     NumberInputDialog(
@@ -140,7 +159,7 @@ private fun Favorite(f: FavoriteConversion, onDelete: () -> Unit, onClick: () ->
         onClick = onClick,
         onLongClick = onDelete,
         label = {
-            Text(text = "${f.from.UNIT.unitShort} ➡ ${f.to.UNIT.unitShort}", style = MaterialTheme.typography.titleMedium)
+            Text(text = f.displayString(), style = MaterialTheme.typography.titleMedium)
         },
         icon = {
             Icon(

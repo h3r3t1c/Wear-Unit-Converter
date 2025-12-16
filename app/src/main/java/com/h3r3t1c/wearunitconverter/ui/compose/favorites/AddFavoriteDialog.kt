@@ -55,7 +55,7 @@ fun AddFavoriteDialog(visible: Boolean, onDismiss: () -> Unit, onAdd: (FavoriteC
             contentPadding = padding,
             edgeButton = {
                 EdgeButton(onClick = {
-                    onAdd(FavoriteConversion(type = type, from = from, to = to))
+                    onAdd(FavoriteConversion(type = type, from = from, to = to, sortOrder = System.currentTimeMillis()))
                 }){
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_check),

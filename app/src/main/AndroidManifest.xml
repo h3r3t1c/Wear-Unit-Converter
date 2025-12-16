@@ -17,12 +17,18 @@
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
+        <activity
+            android:name=".activities.ConvertActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:taskAffinity="convert.to"
+            android:theme="@style/Theme.App.Starting">
 
+        </activity>
         <activity
             android:name=".activities.MainActivity"
             android:exported="true"
             android:launchMode="singleInstance"
-            android:icon="@drawable/splash_screen"
             android:taskAffinity=""
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
@@ -32,6 +38,22 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".tile.FavoritesTile"
+            android:label="@string/tile_favorite_conversions"
+            android:description="@string/tile_favorite_conversions"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/preview_tile_favs" />
+        </service>
     </application>
 
 </manifest>

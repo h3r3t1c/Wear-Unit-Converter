@@ -11,10 +11,13 @@ data class FavoriteConversion(
     val type: Converter.Category,
     val from: Converter.UnitDefinition,
     val to: Converter.UnitDefinition,
+    val sortOrder: Long
 ) {
 
+    fun displayString() = "${from.UNIT.unitShort} ➡ ${to.UNIT.unitShort}"
+
     override fun hashCode(): Int {
-        return id + type.hashCode() + from.hashCode() + to.hashCode()
+        return id * (31 * type.hashCode()) + (31 * from.hashCode()) + (31 * to.hashCode())
     }
 
     override fun equals(other: Any?): Boolean {
