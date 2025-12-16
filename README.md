@@ -1,6 +1,6 @@
 ![banner](https://github.com/h3r3t1c/Wear-Unit-Converter/blob/master/screenshots/banner.png?raw=true)
-# Wear Unit Converter
-Unit Converter is a simple and easy to use unit converter for Wear OS.
+# Unit Converter for Wear OS
+A simple and easy to use unit converter for Wear OS.
 ## Features
 • One to one unit conversion
 
@@ -16,31 +16,51 @@ Unit Converter is a simple and easy to use unit converter for Wear OS.
 
 • Option to show numbers in engineer notation
 
+**This app is standalone and does not require a phone to use!**
 
 ## Supported Conversion Units
 • Acceleration
+
 • Angle
+
 • Area
+
 • Data
+
 • Current
+
 • Electric Charge
+
 • Energy
+
 • Force
+
 • Length
+
 • Luminance
+
 • Luminous Flux
+
 • Mass
+
 • Pressure
+
 • Speed
+
 • Temperature
+
 • Temperature Gradient
+
 • Time
+
 • Torque
+
 • Volume
+
 • Voltage
+
 • Work
 
-This app is standalone and does not require a phone to use.
 
 ## Screenshots
 ![Screenshot 1](https://github.com/h3r3t1c/Wear-Unit-Converter/blob/master/screenshots/s1.png?raw=true) 

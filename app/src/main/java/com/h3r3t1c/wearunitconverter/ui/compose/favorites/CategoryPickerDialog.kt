@@ -54,12 +54,12 @@ fun CategoryPickerDialog(visible: Boolean, onDismiss: () -> Unit, onSelect: (Con
                     .fillMaxSize()
                     .background(Color.Black)
             ) {
-                item {
+                item("header") {
                     ListHeader {
                         Text(stringResource(R.string.type))
                     }
                 }
-                items(Converter.Category.entries, key = { it.name }){
+                items(Converter.Category.entries.sortedBy { CategoryHelper.getDisplayName(context, it) }, key = { it.name }){
                     Button(
                         onClick = {
                             onSelect(it)
