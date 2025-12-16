@@ -1,6 +1,7 @@
 *.iml
 .gradle
 *.aab
+*.apk
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -18,3 +19,5 @@ local.properties
 /.idea/codeStyles/codeStyleConfig.xml
 /app/release/app-release.apk
 /app/release/output-metadata.json
+/app/release/baselineProfiles/0/app-release.dm
+/app/release/baselineProfiles/1/app-release.dm
