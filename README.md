@@ -3,12 +3,19 @@
 Unit Converter is a simple and easy to use unit converter for Wear OS.
 ## Features
 • One to one unit conversion
+
 • One to many unit conversion
+
 • Favorite conversions
+
 • Favorite conversions Tile with slots for up to four favorites
+
 • Max decimal places option
+
 • Many categories and units to choose from
+
 • Option to show numbers in engineer notation
+
 
 ## Supported Conversion Units
 • Acceleration
